@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DragGestureViewModifier: ViewModifier {
+struct CardDragGesture: ViewModifier {
     @State private var xOffset: CGFloat = .zero
     @State private var yOffset: CGFloat = .zero
     @State private var view: CGSize = .zero
@@ -98,19 +98,20 @@ struct DragGestureViewModifier: ViewModifier {
 }
 
 extension View {
-    func dragGesture(
+    func cardDragGesture(
         minimumDistance: CGFloat = 10,
         coordinateSpace: CoordinateSpace = .global,
         directions: [Direction],
         onChange: @escaping (Direction) -> Void,
         onEnd: @escaping (Direction) -> Void
     ) -> some View {
-        modifier(DragGestureViewModifier(
+        modifier(CardDragGesture(
             minimumDistance: minimumDistance,
             coordinateSpace: coordinateSpace,
             supportedDirection: directions,
             onChange: onChange,
-            onEnd: onEnd))
+            onEnd: onEnd)
+        )
     }
 }
 
@@ -120,7 +121,7 @@ extension View {
         .shadow(radius: 5)
         .aspectRatio(1, contentMode: .fit)
         .frame(width: 200)
-        .dragGesture(directions: Direction.allCases) { direction in
+        .cardDragGesture(directions: Direction.allCases) { direction in
             print("\(direction) swipe")
         } onEnd: { direction in
             print("Ended \(direction) swipe")
