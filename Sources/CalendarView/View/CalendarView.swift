@@ -1,40 +1,35 @@
 import SwiftUI
 
-public struct CalendarView<TodayView: View,
-                           WeekdayLabelsBackground: View,
-                           WeekendBackground: View>: View {
-    let presenter: Presenter
-    @ObservedObject var observer: Observer
-    var viewModel: ViewModel { presenter.viewModel }
+public struct CalendarView<DayView: View,
+                           DayBackground: View,
+                           WeekdayLabelsBackground: View>: View {
+    typealias CalendarDate = ViewModel.CalendarDate
     
-    let titleFont: Font
-    let labelFont: Font
-    let dayFont: Font
+    @ObservedObject private var observer: Observer
+    private let presenter: Presenter
+    private var viewModel: ViewModel { presenter.viewModel }
     
-    let todayView: (() -> TodayView)?
-    let weekdayLabelsBackground: (() -> WeekdayLabelsBackground)?
-    let weekendBackground: (() -> WeekendBackground)?
+    // Custom Views
+    private let customDayView: ((CalendarDate) -> DayView)?
+    private let customDayBackground: ((CalendarDate) -> DayBackground)?
+    private let customWeekdayLabelsBackground: (() -> WeekdayLabelsBackground)?
     
-    init(
-        month: Int,
-        year: Int,
-        startOfWeek: Weekday,
-        titleFont: Font,
-        labelFont: Font,
-        dayFont: Font,
-        todayView: (() -> TodayView)?,
-        weekdayLabelsBackground: (() -> WeekdayLabelsBackground)?,
-        weekendBackground: (() -> WeekendBackground)?
-    ) {
+    // Actions
+    private let onTap: (CalendarDate) -> Void
+    
+    init(month: Int,
+         year: Int,
+         startOfWeek: Weekday,
+         customDayView: ((CalendarDate) -> DayView)?,
+         customDayBackground: ((CalendarDate) -> DayBackground)?,
+         customWeekdayLabelsBackground: (() -> WeekdayLabelsBackground)?,
+         onTap: @escaping (CalendarDate) -> Void) {
         self.presenter = Presenter(month: month, year: year, startOfWeek: startOfWeek)
         self.observer = Observer(presenter: presenter)
-        self.titleFont = titleFont
-        self.labelFont = labelFont
-        self.dayFont = dayFont
-        
-        self.todayView = todayView
-        self.weekdayLabelsBackground = weekdayLabelsBackground
-        self.weekendBackground = weekendBackground
+        self.customDayView = customDayView
+        self.customDayBackground = customDayBackground
+        self.customWeekdayLabelsBackground = customWeekdayLabelsBackground
+        self.onTap = onTap
         
         presenter.scene = observer
     }
@@ -61,10 +56,10 @@ public struct CalendarView<TodayView: View,
             Button {
                 observer.perform(action: .didLast)
             } label: {
-                Image(systemName: "arrowshape.left.fill")
+                Image.arrowLeft
             }
             Spacer()
-            Text(viewModel.month)
+            Text(viewModel.title)
                 .onTapGesture {
                     observer.perform(action: .didTapToday)
                 }
@@ -72,10 +67,10 @@ public struct CalendarView<TodayView: View,
             Button {
                 observer.perform(action: .didNext)
             } label: {
-                Image(systemName: "arrowshape.right.fill")
+                Image.arrowRight
             }
         }
-        .font(titleFont)
+        .font(.title3)
     }
     
     @ViewBuilder
@@ -83,28 +78,105 @@ public struct CalendarView<TodayView: View,
         VStack(alignment: .center, spacing: 8) {
             titleStack
             TabView {
-                MonthView(
-                    weekdays: viewModel.weekdays,
-                    dates: viewModel.dates,
-                    labelFont: labelFont,
-                    dayFont: dayFont,
-                    todayView: todayView,
-                    weekdayLabelsBackground: weekdayLabelsBackground,
-                    weekendBackground: weekendBackground) { date in
-                        observer.perform(action: .didTap(date))
-                    }
-                    .contentShape(Rectangle())
-                    .id(viewModel.month)
+                monthBody
+                    .id(viewModel.title)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .animation(.linear, value: viewModel.month)
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .animation(.linear, value: viewModel.title)
             .transition(.opacity)
+        }
+    }
+}
+
+// MARK: - Month
+extension CalendarView {
+    public var monthBody: some View {
+        Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
+            weekdayLabels
+                .font(.body)
+            monthCells
+                .font(.caption)
+        }
+        .contentShape(Rectangle())
+    }
+    
+    @ViewBuilder
+    var weekdayLabels: some View {
+        GridRow {
+            ForEach(viewModel.weekdays, id: \.self) { day in
+                Text(day)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .background {
+            if let customWeekdayLabelsBackground {
+                customWeekdayLabelsBackground()
+            } else {
+                Color.accentColor.opacity(0.75)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    var monthCells: some View {
+        ForEach(viewModel.dates.chunked(into: 7), id: \.self) { week in
+            GridRow {
+                ForEach(week, id: \.date) { date in
+                    if let customDayView {
+                        customDayView(date)
+                    } else {
+                        dayBody(date: date)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Day
+extension CalendarView {
+    @ViewBuilder
+    func dayBody(date: CalendarDate) -> some View {
+        let day = Calendar.current.component(.day, from: date.date)
+        Text("\(day)")
+            .opacity(date.isThisMonth ? 1.0 : 0.5)
+            .aspectRatio(1, contentMode: .fill)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background {
+                if let customDayBackground {
+                    customDayBackground(date)
+                } else {
+                    defaultDayBackground(date: date)
+                }
+            }
+            .onTapGesture {
+                onTap(date)
+            }
+    }
+    
+    @ViewBuilder
+    func defaultDayBackground(date: CalendarDate) -> some View {
+        ZStack {
+            if !date.isWeekday {
+                Color.accentColor
+                    .opacity(0.25)
+            } else {
+                Color.white
+            }
+            
+            if date.isToday {
+                Circle()
+                    .fill(.red)
+                    .opacity(0.25)
+            }
         }
     }
 }
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(month: 12, year: 2023, startOfWeek: .sunday, titleFont: .title3, labelFont: .body, dayFont: .caption)
+        CalendarView(month: 12, year: 2023, startOfWeek: .monday) { date in
+            print(date)
+        }
     }
 }

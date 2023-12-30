@@ -29,7 +29,7 @@ final class Presenter: PresenterType {
     init(month: Int, year: Int, startOfWeek: Weekday) {
         self.month = month
         self.year = year
-        self.viewModel = ViewModel(month: "", weekdays: [], dates: [])
+        self.viewModel = ViewModel(title: "", weekdays: [], dates: [])
         self.startOfWeek = startOfWeek
         
         updateViewModel(month: month, year: year)
@@ -81,15 +81,15 @@ private extension Presenter {
         else { return }
         
         viewModel = ViewModel(
-            month: formatter.string(from: startOfMonth),
+            title: formatter.string(from: startOfMonth),
             weekdays: getWeekdayLabels(),
             dates: generateDates(from: firstDate, to: lastDate)
                 .map { [weak self] date -> ViewModel.CalendarDate in
                     ViewModel.CalendarDate(
                         date: date,
+                        isToday: Calendar.current.isDateInToday(date),
                         isWeekday: self?.isWeekday(date) ?? false ,
-                        isThisMonth: self?.isDate(inMonth: month, date) ?? false,
-                        isToday: Calendar.current.isDateInToday(date)
+                        isThisMonth: self?.isDate(inMonth: month, date) ?? false
                     )
                 }
         )

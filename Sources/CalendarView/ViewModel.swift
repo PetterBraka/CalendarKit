@@ -8,7 +8,7 @@
 import Foundation
 
 struct ViewModel {
-    let month: String
+    let title: String
     let weekdays: [String]
     let dates: [CalendarDate]
 }
@@ -16,8 +16,8 @@ struct ViewModel {
 extension ViewModel {
     struct CalendarDate: Hashable {
         let date: Date
+        let isToday: Bool
         let isWeekday: Bool
         let isThisMonth: Bool
-        let isToday: Bool
     }
 }
