@@ -35,7 +35,13 @@ public struct CalendarView<DayView: View,
     }
     
     public var body: some View {
-        monthView()
+        VStack(alignment: .center, spacing: 8) {
+            titleStack
+            monthView
+                .id(viewModel.title)
+                .animation(.linear, value: viewModel.title)
+                .transition(.opacity)
+        }
             .dragGesture(directions: [.left, .right]) { swipe in
                 print(swipe)
             } onEnd: { swipe in
@@ -72,25 +78,11 @@ public struct CalendarView<DayView: View,
         }
         .font(.title3)
     }
-    
-    @ViewBuilder
-    func monthView() -> some View {
-        VStack(alignment: .center, spacing: 8) {
-            titleStack
-            TabView {
-                monthBody
-                    .id(viewModel.title)
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(.linear, value: viewModel.title)
-            .transition(.opacity)
-        }
-    }
 }
 
 // MARK: - Month
 extension CalendarView {
-    public var monthBody: some View {
+    public var monthView: some View {
         Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
             weekdayLabels
                 .font(.body)
@@ -125,7 +117,7 @@ extension CalendarView {
                     if let customDayView {
                         customDayView(date)
                     } else {
-                        dayBody(date: date)
+                        dayView(date: date)
                     }
                 }
             }
@@ -136,17 +128,16 @@ extension CalendarView {
 // MARK: - Day
 extension CalendarView {
     @ViewBuilder
-    func dayBody(date: CalendarDate) -> some View {
+    func dayView(date: CalendarDate) -> some View {
         let day = Calendar.current.component(.day, from: date.date)
         Text("\(day)")
             .opacity(date.isThisMonth ? 1.0 : 0.5)
-            .aspectRatio(1, contentMode: .fill)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 if let customDayBackground {
                     customDayBackground(date)
                 } else {
-                    defaultDayBackground(date: date)
+                    dayBackground(date: date)
                 }
             }
             .onTapGesture {
@@ -155,7 +146,7 @@ extension CalendarView {
     }
     
     @ViewBuilder
-    func defaultDayBackground(date: CalendarDate) -> some View {
+    func dayBackground(date: CalendarDate) -> some View {
         ZStack {
             if !date.isWeekday {
                 Color.accentColor
@@ -164,10 +155,15 @@ extension CalendarView {
                 Color.white
             }
             
+            Rectangle()
+                .fill(.clear)
+                .border(.black, width: 0.25)
+            
             if date.isToday {
                 Circle()
                     .fill(.red)
                     .opacity(0.25)
+                    .padding(4)
             }
         }
     }
@@ -175,8 +171,12 @@ extension CalendarView {
 
 struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        CalendarView(month: 12, year: 2023, startOfWeek: .monday) { date in
-            print(date)
+        VStack {
+            CalendarView(month: 12, year: 2023, startOfWeek: .monday) { date in
+                print(date)
+            }
+            Spacer()
+                .layoutPriority(0)
         }
     }
 }
