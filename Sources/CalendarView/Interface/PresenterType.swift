@@ -6,5 +6,5 @@
 //
 
 protocol PresenterType: AnyObject {
-    func perform(action: Action)
+    func perform(action: CalendarAction)
 }

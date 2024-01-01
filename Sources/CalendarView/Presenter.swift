@@ -40,7 +40,7 @@ final class Presenter: PresenterType {
         setViewModel()
     }
     
-    func perform(action: Action) {
+    func perform(action: CalendarAction) {
         switch action {
         case .didAppear:
             break

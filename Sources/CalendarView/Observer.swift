@@ -24,7 +24,7 @@ final class Observer: ObservableObject, SceneType {
     }
     
     
-    func perform(action: Action) {
+    func perform(action: CalendarAction) {
         presenter.perform(action: action)
     }
 }
