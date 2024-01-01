@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct ViewModel {
+public struct ViewModel {
     let title: String
     let weekdays: [String]
     let dates: [CalendarDate]
 }
 
 extension ViewModel {
-    struct CalendarDate: Hashable {
+    public struct CalendarDate: Hashable {
         let date: Date
         let isToday: Bool
         let isWeekday: Bool
