@@ -9,7 +9,8 @@ import Foundation
 
 final class Observer: ObservableObject, SceneType {
     private let presenter: Presenter
-    var viewModel: ViewModel { presenter.viewModel }
+    private var viewModel: [ViewModel] { presenter.viewModels }
+    public var currentPage: Int { presenter.currentPage }
     
     init(presenter: Presenter) {
         self.presenter = presenter

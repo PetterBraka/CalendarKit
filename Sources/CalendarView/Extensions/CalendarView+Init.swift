@@ -8,10 +8,13 @@
 import SwiftUI
 
 extension CalendarView where DayView == EmptyView, DayBackground == EmptyView, WeekdayLabelsBackground == EmptyView {
-    init(month: Int,
-         year: Int,
+    public init(startDate: Date = .now,
+         range: ClosedRange<Date>,
          startOfWeek: Weekday,
          onTap: @escaping (CalendarDate) -> Void) {
-        self.init(month: month, year: year, startOfWeek: startOfWeek, customDayView: nil, customDayBackground: nil, customWeekdayLabelsBackground: nil, onTap: onTap)
+        self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
+                  customDayView: nil, customDayBackground: nil, customWeekdayLabelsBackground: nil,
+                  onTap: onTap)
+        
     }
 }

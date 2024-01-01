@@ -9,15 +9,17 @@ import Foundation
 
 final class Presenter: PresenterType {
     public weak var scene: SceneType?
-    private(set) var viewModel: ViewModel {
+    private(set) var viewModels: [ViewModel] {
         didSet { scene?.perform(update: .viewModel) }
     }
     
     private var startOfWeek: Weekday
     private let calendar: Calendar = Calendar.current
     
+    private let range: ClosedRange<Date>
     private var month: Int
     private var year: Int
+    internal var currentPage: Int
     
     private let formatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -26,61 +28,75 @@ final class Presenter: PresenterType {
         return formatter
     }()
     
-    init(month: Int, year: Int, startOfWeek: Weekday) {
-        self.month = month
-        self.year = year
-        self.viewModel = ViewModel(title: "", weekdays: [], dates: [])
+    init(startDate: Date, range: ClosedRange<Date>, startOfWeek: Weekday) {
+        self.viewModels = []
         self.startOfWeek = startOfWeek
         
-        updateViewModel(month: month, year: year)
+        self.range = range
+        self.month = calendar.component(.month, from: startDate)
+        self.year = calendar.component(.month, from: startDate)
+        self.currentPage = 0
+        
+        setViewModel()
     }
     
     func perform(action: Action) {
         switch action {
         case .didAppear:
             break
-        case let .didTap(date):
-            print(date)
         case .didTapToday:
-            updateViewModel(
-                month: calendar.component(.month, from: .now),
-                year: calendar.component(.year, from: .now)
-            )
-        case .didNext:
-            let components = DateComponents(year: year, month: month, day: 1)
-            guard let dateFromComponents = calendar.date(from: components),
-                  let date = calendar.date(byAdding: .init(month: 1),
-                                           to: dateFromComponents)
-            else { return }
-            year = calendar.component(.year, from: date)
-            month = calendar.component(.month, from: date)
-            updateViewModel(month: month, year: year)
-        case .didLast:
-            let components = DateComponents(year: year, month: month, day: 1)
-            guard let dateFromComponents = calendar.date(from: components),
-                  let date = calendar.date(byAdding: .init(month: -1),
-                                           to: dateFromComponents)
-            else { return }
-            year = calendar.component(.year, from: date)
-            month = calendar.component(.month, from: date)
-            updateViewModel(month: month, year: year)
+            break
+//            updateViewModel(
+//                month: calendar.component(.month, from: .now),
+//                year: calendar.component(.year, from: .now)
+//            )
         }
     }
 }
 
 private extension Presenter {
-    func updateViewModel(month: Int, year: Int) {
+    func setViewModel() {
+        viewModels = getRange()
+            .compactMap { [weak self] (month, year) in
+                self?.initViewModel(month: month, year: year)
+            }
+    }
+    
+    func getRange() -> [(month: Int, year: Int)] {
+        var dateRange: [(month: Int, year: Int)] = []
+        var date = range.lowerBound
+        var index = 0
+        while date <= range.upperBound {
+            let month = calendar.component(.month, from: date)
+            let year = calendar.component(.year, from: date)
+            dateRange.append((month, year))
+            guard let newDate = calendar.date(byAdding: .month, value: 1, to: date)
+            else {
+                return dateRange
+            }
+            index += 1
+            if calendar.isDate(newDate, inSameDayAs: .now) {
+                currentPage = index
+            }
+            date = newDate
+        }
+        return dateRange
+    }
+}
+
+private extension Presenter {
+    func initViewModel(month: Int, year: Int) -> ViewModel? {
         let startOfMonth = getStartOfMonth(month: month, year: year)
         guard let endOfMonth = getEndOfMonth(from: startOfMonth)
-        else { return }
+        else { return nil }
         
         let daysToAddBefore = getDaysToAddBefore(startOfMonth)
         let daysToAddAfter = getDaysToAddAfter(endOfMonth)
         guard let firstDate = calendar.date(byAdding: .day, value: -daysToAddBefore, to: startOfMonth),
-        let lastDate = calendar.date(byAdding: .day, value: daysToAddAfter, to: endOfMonth)
-        else { return }
+              let lastDate = calendar.date(byAdding: .day, value: daysToAddAfter, to: endOfMonth)
+        else { return nil }
         
-        viewModel = ViewModel(
+        return ViewModel(
             title: formatter.string(from: startOfMonth),
             weekdays: getWeekdayLabels(),
             dates: generateDates(from: firstDate, to: lastDate)
