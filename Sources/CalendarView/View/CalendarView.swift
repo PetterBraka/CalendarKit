@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct CalendarView<DayView: View,
                            DayBackground: View,
-                           WeekdayLabelsBackground: View>: View {
+                           WeekdayLabel: View>: View {
     public typealias CalendarDate = ViewModel.CalendarDate
     
     @ObservedObject private var observer: Observer
@@ -12,7 +12,7 @@ public struct CalendarView<DayView: View,
     // Custom Views
     private let customDayView: ((CalendarDate) -> DayView)?
     private let customDayBackground: ((CalendarDate) -> DayBackground)?
-    private let customWeekdayLabelsBackground: (() -> WeekdayLabelsBackground)?
+    private let customWeekdayLabel: ((String) -> WeekdayLabel)?
     
     // Actions
     private let onTap: (CalendarDate) -> Void
@@ -22,13 +22,13 @@ public struct CalendarView<DayView: View,
          startOfWeek: Weekday,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
-         customWeekdayLabelsBackground: (() -> WeekdayLabelsBackground)?,
+         customWeekdayLabel: ((String) -> WeekdayLabel)?,
          onTap: @escaping (CalendarDate) -> Void) {
         self.presenter = Presenter(startDate: startDate, range: range, startOfWeek: startOfWeek)
         self.observer = Observer(presenter: presenter)
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground
-        self.customWeekdayLabelsBackground = customWeekdayLabelsBackground
+        self.customWeekdayLabel = customWeekdayLabel
         self.onTap = onTap
         
         presenter.scene = observer
@@ -79,15 +79,15 @@ private extension CalendarView {
     func weekdayLabels(_ viewModel: ViewModel) -> some View {
         GridRow {
             ForEach(viewModel.weekdays, id: \.self) { day in
-                Text(day)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-        }
-        .background {
-            if let customWeekdayLabelsBackground {
-                customWeekdayLabelsBackground()
-            } else {
-                Color.accentColor.opacity(0.75)
+                if let customWeekdayLabel {
+                    customWeekdayLabel(day)
+                } else {
+                    Text(day)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background {
+                            Color.accentColor.opacity(0.75)
+                        }
+                }
             }
         }
     }
