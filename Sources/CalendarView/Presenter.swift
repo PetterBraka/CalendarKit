@@ -134,11 +134,7 @@ private extension Presenter {
     func getDaysToAddAfter(_ endOfMonth: Date) -> Int {
         let daysToAddAfter = calendar.component(.weekday, from: endOfMonth)
         let weekdayIndex = startOfWeek.number - 1
-        if daysToAddAfter == 7 {
-            return (6 + weekdayIndex) % 7
-        } else {
-            return (7 - daysToAddAfter + weekdayIndex) % 7
-        }
+        return (7 - daysToAddAfter + weekdayIndex) % 7
     }
     
     func generateDates(from start: Date, to end: Date) -> [Date] {
