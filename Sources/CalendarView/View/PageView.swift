@@ -11,21 +11,24 @@ public struct PageView<Page: View>: UIViewControllerRepresentable {
     private let pages: [UIViewController]
     private let initialIndex: Int
     private let transition: PageTransition
+    private let orientation: Orientation
     
     public init(
         initialIndex: Int,
         pages: [Page],
-        transition: PageTransition = .pageCurl
+        transition: PageTransition = .pageCurl,
+        orientation: Orientation
     ) {
         self.initialIndex = initialIndex
         self.pages = pages.map { UIHostingController(rootView: $0) }
         self.transition = transition
+        self.orientation = orientation
     }
     
     public func makeUIViewController(context: Context) -> UIPageViewController {
         let pageViewController = UIPageViewController(
             transitionStyle: .init(from: transition),
-            navigationOrientation: .horizontal
+            navigationOrientation: .init(from: orientation)
         )
         pageViewController.dataSource = context.coordinator
         setInitialPage(of: pageViewController)
