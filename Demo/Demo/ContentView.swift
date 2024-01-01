@@ -22,6 +22,23 @@ struct ContentView: View {
             CalendarView(range: start ... end, startOfWeek: .monday) { date in
                 print(date)
             }
+            CalendarView(range: start ... end, startOfWeek: .monday) {  date in
+                print(date)
+            } customDayView: { date in
+                VStack(alignment: .center, spacing: 0) {
+                    Text("\(Calendar.current.component(.day, from: date.date))")
+                        .opacity(date.isThisMonth ? 1.0 : 0.5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background {
+                            RoundedRectangle(cornerRadius: 8)
+                                .opacity(date.isWeekday ? 0 : 0.25)
+                        }
+                    Spacer()
+                }
+            } customWeekdayLabel: { text in
+                Text(text)
+            }
+
             Spacer()
                 .layoutPriority(0)
         }
