@@ -39,6 +39,9 @@ public struct CalendarView<DayView: View,
             initialIndex: observer.currentPage,
             pages: viewModels.map { page($0) }
         )
+        .onAppear {
+            observer.perform(action: .didAppear)
+        }
     }
     
     @ViewBuilder
