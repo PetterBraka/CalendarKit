@@ -28,7 +28,7 @@ final class Presenter: PresenterType {
         return formatter
     }()
     
-    init(startDate: Date, range: ClosedRange<Date>, startOfWeek: Weekday) {
+    internal init(startDate: Date, range: ClosedRange<Date>, startOfWeek: Weekday) {
         self.viewModels = []
         self.startOfWeek = startOfWeek
         
@@ -40,7 +40,7 @@ final class Presenter: PresenterType {
         setViewModel()
     }
     
-    func perform(action: CalendarAction) {
+    internal func perform(action: CalendarAction) {
         switch action {
         case .didAppear:
             break

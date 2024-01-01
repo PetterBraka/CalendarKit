@@ -15,9 +15,9 @@ public struct ViewModel {
 
 extension ViewModel {
     public struct CalendarDate: Hashable {
-        let date: Date
-        let isToday: Bool
-        let isWeekday: Bool
-        let isThisMonth: Bool
+        public let date: Date
+        public let isToday: Bool
+        public let isWeekday: Bool
+        public let isThisMonth: Bool
     }
 }

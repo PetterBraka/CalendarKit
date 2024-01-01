@@ -12,11 +12,11 @@ final class Observer: ObservableObject, SceneType {
     private var viewModel: [ViewModel] { presenter.viewModels }
     public var currentPage: Int { presenter.currentPage }
     
-    init(presenter: Presenter) {
+    internal init(presenter: Presenter) {
         self.presenter = presenter
     }
     
-    func perform(update: Update) {
+    internal func perform(update: Update) {
         switch update {
         case .viewModel:
             self.objectWillChange.send()
@@ -24,7 +24,7 @@ final class Observer: ObservableObject, SceneType {
     }
     
     
-    func perform(action: CalendarAction) {
+    internal func perform(action: CalendarAction) {
         presenter.perform(action: action)
     }
 }
