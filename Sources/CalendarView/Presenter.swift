@@ -24,7 +24,7 @@ final class Presenter: PresenterType {
     private let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = .current
-        formatter.dateFormat = "MMMM YYYY"
+        formatter.dateFormat = "MMMM yyyy"
         return formatter
     }()
     
