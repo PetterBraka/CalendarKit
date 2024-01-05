@@ -64,7 +64,7 @@ public struct CalendarView<DayView: View,
 }
 
 // MARK: - Month
-private extension CalendarKit {
+private extension CalendarView {
     func monthView(_ viewModel: ViewModel) -> some View {
         Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
             weekdayLabels(viewModel)
@@ -109,7 +109,7 @@ private extension CalendarKit {
 }
 
 // MARK: - Day
-private extension CalendarKit {
+private extension CalendarView {
     @ViewBuilder
     func dayView(date: CalendarDate) -> some View {
         let day = Calendar.current.component(.day, from: date.date)
@@ -152,12 +152,12 @@ private extension CalendarKit {
     }
 }
 
-struct CalendarKit_Previews: PreviewProvider {
+struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             let start = Calendar.current.date(from: .init(year: 2022, month: 1, day: 1))!
             let end = Calendar.current.date(from: .init(year: 2024, month: 12, day: 1))!
-            CalendarKit(range: start ... end, startOfWeek: .monday) { date in
+            CalendarView(range: start ... end, startOfWeek: .monday) { date in
                 print(date)
             }
             Spacer()

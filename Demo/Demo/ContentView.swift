@@ -19,10 +19,10 @@ struct ContentView: View {
         VStack {
             Text("Calendar demo")
             
-            CalendarKit(range: start ... end, startOfWeek: .monday) { date in
+            CalendarView(range: start ... end, startOfWeek: .monday) { date in
                 print(date)
             }
-            CalendarKit(range: start ... end, startOfWeek: .monday) {  date in
+            CalendarView(range: start ... end, startOfWeek: .monday) {  date in
                 print(date)
             } customDayView: { date in
                 VStack(alignment: .center, spacing: 0) {
