@@ -3,11 +3,8 @@ import SwiftUI
 public struct CalendarView<DayView: View,
                            DayBackground: View,
                            WeekdayLabel: View>: View {
-    public typealias CalendarDate = ViewModel.CalendarDate
-    
     @ObservedObject private var observer: Observer
     private let presenter: Presenter
-    private var viewModels: [ViewModel] { presenter.viewModels }
     
     // Custom Views
     private let customDayView: ((CalendarDate) -> DayView)?
@@ -36,8 +33,8 @@ public struct CalendarView<DayView: View,
     
     public var body: some View {
         PageView(
-            initialIndex: observer.currentPage,
-            pages: viewModels.map { page($0) },
+            initialIndex: observer.viewModel.currentPage,
+            pages: observer.pages.map { page($0) },
             orientation: .horizontal
         )
         .onAppear {
@@ -46,7 +43,7 @@ public struct CalendarView<DayView: View,
     }
     
     @ViewBuilder
-    private func page(_ viewModel: ViewModel) -> some View {
+    private func page(_ viewModel: PageViewModel) -> some View {
         VStack(spacing: 0) {
             titleStack(viewModel)
             monthView(viewModel)
@@ -54,7 +51,7 @@ public struct CalendarView<DayView: View,
     }
     
     @ViewBuilder
-    private func titleStack(_ viewModel: ViewModel) -> some View {
+    private func titleStack(_ viewModel: PageViewModel) -> some View {
         Text(viewModel.title)
             .onTapGesture {
                 observer.perform(action: .didTapToday)
@@ -65,7 +62,7 @@ public struct CalendarView<DayView: View,
 
 // MARK: - Month
 private extension CalendarView {
-    func monthView(_ viewModel: ViewModel) -> some View {
+    func monthView(_ viewModel: PageViewModel) -> some View {
         Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
             weekdayLabels(viewModel)
                 .font(.body)
@@ -76,7 +73,7 @@ private extension CalendarView {
     }
     
     @ViewBuilder
-    func weekdayLabels(_ viewModel: ViewModel) -> some View {
+    func weekdayLabels(_ viewModel: PageViewModel) -> some View {
         GridRow {
             ForEach(viewModel.weekdays, id: \.self) { day in
                 if let customWeekdayLabel {
@@ -93,7 +90,7 @@ private extension CalendarView {
     }
     
     @ViewBuilder
-    func monthCells(_ viewModel: ViewModel) -> some View {
+    func monthCells(_ viewModel: PageViewModel) -> some View {
         ForEach(viewModel.dates.chunked(into: 7), id: \.self) { week in
             GridRow {
                 ForEach(week, id: \.date) { date in

@@ -9,8 +9,8 @@ import Foundation
 
 final class Observer: ObservableObject, SceneType {
     private let presenter: Presenter
-    private var viewModel: [ViewModel] { presenter.viewModels }
-    public var currentPage: Int { presenter.currentPage }
+    internal var pages: [PageViewModel] { presenter.pageViewModels }
+    internal var viewModel: ViewModel { presenter.viewModel }
     
     internal init(presenter: Presenter) {
         self.presenter = presenter
@@ -18,7 +18,7 @@ final class Observer: ObservableObject, SceneType {
     
     internal func perform(update: Update) {
         switch update {
-        case .viewModel:
+        case .pages, .viewModel:
             self.objectWillChange.send()
         }
     }

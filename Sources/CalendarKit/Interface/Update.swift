@@ -6,5 +6,6 @@
 //
 
 enum Update {
+    case pages
     case viewModel
 }
