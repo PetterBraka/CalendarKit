@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CalendarView
+import CalendarKit
 
 let calendar = Calendar.current
 
@@ -19,10 +19,10 @@ struct ContentView: View {
         VStack {
             Text("Calendar demo")
             
-            CalendarView(range: start ... end, startOfWeek: .monday) { date in
+            CalendarKit(range: start ... end, startOfWeek: .monday) { date in
                 print(date)
             }
-            CalendarView(range: start ... end, startOfWeek: .monday) {  date in
+            CalendarKit(range: start ... end, startOfWeek: .monday) {  date in
                 print(date)
             } customDayView: { date in
                 VStack(alignment: .center, spacing: 0) {

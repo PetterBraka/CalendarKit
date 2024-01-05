@@ -1,7 +1,7 @@
 import XCTest
-@testable import CalendarView
+@testable import CalendarKit
 
-final class CalendarViewTests: XCTestCase {
+final class CalendarKitTests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest
