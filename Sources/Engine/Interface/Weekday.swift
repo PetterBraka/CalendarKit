@@ -30,16 +30,4 @@ public enum Weekday: CaseIterable {
         case .saturday: 7
         }
     }
-    
-    var offset: Int {
-        switch self {
-        case .sunday: 7
-        case .monday: 6
-        case .tuesday: 5
-        case .wednesday: 4
-        case .thursday: 3
-        case .friday: 2
-        case .saturday: 1
-        }
-    }
 }

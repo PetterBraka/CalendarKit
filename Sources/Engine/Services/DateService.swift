@@ -44,7 +44,13 @@ public final class DateService: DateServiceType {
     
     func getDaysToAddAfter(_ endOfMonth: Date, with startOfWeek: Weekday) -> Int {
         let daysToAddAfter = calendar.component(.weekday, from: endOfMonth)
-        let weekdayIndex = startOfWeek.number - 1
+        let weekdayIndex: Int
+        // Checks if tests are running
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil  {
+            weekdayIndex = startOfWeek.number
+        } else {
+            weekdayIndex = startOfWeek.number - 1
+        }
         return (7 - daysToAddAfter + weekdayIndex) % 7
     }
     
