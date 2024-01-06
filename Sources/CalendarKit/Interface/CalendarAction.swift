@@ -8,5 +8,6 @@
 import Foundation
 
 enum CalendarAction {
+    case didSet(page: Int)
     case didSetPageTo(date: Date)
 }

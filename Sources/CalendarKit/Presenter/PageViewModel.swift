@@ -8,6 +8,7 @@
 import Foundation
 
 public struct PageViewModel {
+    let pageIndex: Int
     let month: Int
     let year: Int
     let title: String

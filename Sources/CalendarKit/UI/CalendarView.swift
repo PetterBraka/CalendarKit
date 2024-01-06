@@ -31,11 +31,25 @@ public struct CalendarView<DayView: View,
     }
     
     public var body: some View {
-        PageView(
-            initialIndex: observer.viewModel.currentPage,
-            pages: observer.pages.map { page($0) },
-            orientation: .horizontal
-        )
+//        PageView(
+//            initialIndex: observer.viewModel.currentPage,
+//            pages: observer.pages.map { page($0) },
+//            orientation: .horizontal
+//        )
+        
+        let selectionBinding = Binding {
+            observer.viewModel.currentPage
+        } set: { page in
+            observer.perform(action: .didSet(page: page))
+        }
+        TabView(selection: selectionBinding) {
+            ForEach(observer.pages, id: \.pageIndex) { model in
+                page(model)
+                    .tag(model.pageIndex)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .animation(.default, value: observer.viewModel.currentPage)
     }
     
     @ViewBuilder
