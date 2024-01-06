@@ -14,6 +14,22 @@ public struct ViewModel {
 }
 
 extension ViewModel {
+    public struct Page {
+        public let pageIndex: Int
+        public let month: Int
+        public let year: Int
+        public let title: String
+        public let weekdays: [String]
+        public let dates: [CalendarDate]
+    }
+
+    public struct CalendarDate: Hashable {
+        public let date: Date
+        public let isToday: Bool
+        public let isWeekday: Bool
+        public let isThisMonth: Bool
+    }
+    
     public enum Weekday {
         case monday
         case tuesday

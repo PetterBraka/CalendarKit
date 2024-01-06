@@ -14,7 +14,7 @@ public final class Presenter: PresenterType {
     private(set) public var viewModel: ViewModel {
         didSet { scene?.perform(update: .viewModel) }
     }
-    private(set) public var pageViewModels: [PageViewModel] {
+    private(set) public var pageModels: [ViewModel.Page] {
         didSet { scene?.perform(update: .pages) }
     }
     
@@ -29,7 +29,7 @@ public final class Presenter: PresenterType {
     
     public init(startDate: Date, range: ClosedRange<Date>, startOfWeek: ViewModel.Weekday) {
         self.viewModel = ViewModel(currentPage: 0, range: range)
-        self.pageViewModels = []
+        self.pageModels = []
         self.dateService = DateService()
         
         setPages(startOfWeek: startOfWeek)
@@ -39,7 +39,7 @@ public final class Presenter: PresenterType {
         switch action {
         case let .didSetPageTo(date):
             let (year, month) = dateService.getComponents(from: date)
-            guard let page = pageViewModels.firstIndex(where: {
+            guard let page = pageModels.firstIndex(where: {
                 $0.year == year && $0.month == month
             })
             else { return }
@@ -59,7 +59,7 @@ private extension Presenter {
 
 private extension Presenter {
     func setPages(startOfWeek: ViewModel.Weekday) {
-        pageViewModels = getRange()
+        pageModels = getRange()
             .compactMap { [weak self] (page, month, year) in
                 self?.initPage(pageIndex: page,
                                month: month, year: year,
@@ -96,18 +96,18 @@ private extension Presenter {
         return dateRange
     }
 
-    func initPage(pageIndex: Int, month: Int, year: Int, startOfWeek: Weekday) -> PageViewModel? {
+    func initPage(pageIndex: Int, month: Int, year: Int, startOfWeek: Weekday) -> ViewModel.Page? {
         guard let date = Calendar.current.date(from: .init(year: year, month: month)),
               let firstDate = dateService.getStartDate(of: month, year, with: startOfWeek),
               let lastDate = dateService.getEndDate(from: firstDate, with: startOfWeek)
         else { return nil }
         
-        return PageViewModel(
+        return ViewModel.Page(
             pageIndex: pageIndex, month: month, year: year,
             title: formatter.string(from: date),
             weekdays: dateService.getWeekdayLabels(with: startOfWeek),
             dates: dateService.generateDates(from: firstDate, to: lastDate)
-                .map { [weak self] date -> PageViewModel.CalendarDate in
+                .map { [weak self] date -> ViewModel.CalendarDate in
                         .init(
                             date: date,
                             isToday: Calendar.current.isDateInToday(date),

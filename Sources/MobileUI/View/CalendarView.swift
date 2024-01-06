@@ -4,7 +4,7 @@ import Presenter
 public struct CalendarView<DayView: View,
                            DayBackground: View,
                            WeekdayLabel: View>: View {
-    public typealias CalendarDate = PageViewModel.CalendarDate
+    public typealias CalendarDate = ViewModel.CalendarDate
     @ObservedObject private var observer: Observer
     
     // Custom Views
@@ -59,7 +59,7 @@ public struct CalendarView<DayView: View,
     }
     
     @ViewBuilder
-    private func page(_ viewModel: PageViewModel) -> some View {
+    private func page(_ viewModel: ViewModel.Page) -> some View {
         VStack(spacing: 0) {
             titleStack(viewModel)
             monthView(viewModel)
@@ -67,7 +67,7 @@ public struct CalendarView<DayView: View,
     }
     
     @ViewBuilder
-    private func titleStack(_ viewModel: PageViewModel) -> some View {
+    private func titleStack(_ viewModel: ViewModel.Page) -> some View {
         Text(viewModel.title)
             .onTapGesture {
                 observer.perform(action: .didSetPageTo(date: .now))
@@ -78,7 +78,7 @@ public struct CalendarView<DayView: View,
 
 // MARK: - Month
 private extension CalendarView {
-    func monthView(_ viewModel: PageViewModel) -> some View {
+    func monthView(_ viewModel: ViewModel.Page) -> some View {
         Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
             weekdayLabels(viewModel)
                 .font(.body)
@@ -89,7 +89,7 @@ private extension CalendarView {
     }
     
     @ViewBuilder
-    func weekdayLabels(_ viewModel: PageViewModel) -> some View {
+    func weekdayLabels(_ viewModel: ViewModel.Page) -> some View {
         GridRow {
             ForEach(viewModel.weekdays, id: \.self) { day in
                 if let customWeekdayLabel {
@@ -106,7 +106,7 @@ private extension CalendarView {
     }
     
     @ViewBuilder
-    func monthCells(_ viewModel: PageViewModel) -> some View {
+    func monthCells(_ viewModel: ViewModel.Page) -> some View {
         ForEach(viewModel.dates.chunked(into: 7), id: \.self) { week in
             GridRow {
                 ForEach(week, id: \.date) { date in

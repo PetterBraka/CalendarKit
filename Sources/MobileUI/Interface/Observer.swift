@@ -10,7 +10,7 @@ import Presenter
 
 final class Observer: ObservableObject, SceneType {
     private let presenter: Presenter
-    internal var pages: [PageViewModel] { presenter.pageViewModels }
+    internal var pages: [ViewModel.Page] { presenter.pageModels }
     internal var viewModel: ViewModel { presenter.viewModel }
     
     internal init(presenter: Presenter) {
@@ -23,7 +23,6 @@ final class Observer: ObservableObject, SceneType {
             self.objectWillChange.send()
         }
     }
-    
     
     internal func perform(action: CalendarAction) {
         presenter.perform(action: action)

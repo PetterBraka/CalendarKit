@@ -12,7 +12,7 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView, W
     public init(startDate: Date = .now,
          range: ClosedRange<Date>,
                 startOfWeek: ViewModel.Weekday,
-         onTap: @escaping (PageViewModel.CalendarDate) -> Void) {
+         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
         self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
                   customDayView: nil, customDayBackground: nil, 
                   customWeekdayLabel: nil,
@@ -25,8 +25,8 @@ extension CalendarView where DayView == EmptyView, WeekdayLabel == EmptyView {
     public init(startDate: Date = .now,
                 range: ClosedRange<Date>,
                 startOfWeek: ViewModel.Weekday,
-                onTap: @escaping (PageViewModel.CalendarDate) -> Void,
-                customDayBackground: @escaping (PageViewModel.CalendarDate) -> DayBackground) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customDayBackground: @escaping (ViewModel.CalendarDate) -> DayBackground) {
         self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
                   customDayView: nil, customDayBackground: customDayBackground,
                   customWeekdayLabel: nil,
@@ -39,7 +39,7 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView {
     public init(startDate: Date = .now,
                 range: ClosedRange<Date>,
                 startOfWeek: ViewModel.Weekday,
-                onTap: @escaping (PageViewModel.CalendarDate) -> Void,
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
                 customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
                   customDayView: nil, customDayBackground: nil,
@@ -53,8 +53,8 @@ extension CalendarView where DayBackground == EmptyView, WeekdayLabel == EmptyVi
     public init(startDate: Date = .now,
                 range: ClosedRange<Date>,
                 startOfWeek: ViewModel.Weekday,
-                onTap: @escaping (PageViewModel.CalendarDate) -> Void,
-                customDayView: @escaping (PageViewModel.CalendarDate) -> DayView) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customDayView: @escaping (ViewModel.CalendarDate) -> DayView) {
         self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
                   customDayView: customDayView, customDayBackground: nil,
                   customWeekdayLabel: nil,
@@ -67,8 +67,8 @@ extension CalendarView where DayBackground == EmptyView {
     public init(startDate: Date = .now,
                 range: ClosedRange<Date>,
                 startOfWeek: ViewModel.Weekday,
-                onTap: @escaping (PageViewModel.CalendarDate) -> Void,
-                customDayView: @escaping (PageViewModel.CalendarDate) -> DayView,
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
                 customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(startDate: startDate, range: range, startOfWeek: startOfWeek,
                   customDayView: customDayView, customDayBackground: nil,
