@@ -15,31 +15,30 @@ let package = Package(
     targets: [
         .target(
             name: "CalendarKit",
-            dependencies: ["MobileUI"]
+            dependencies: ["Presenter"]
         ),
         .target(
             name: "Engine"
         ),
         .target(
-            name: "MobileUI",
-            dependencies: ["Presenter"]
-        ),
-        .target(
             name: "Presenter",
             dependencies: ["Engine"]
+        ),
+        .target(
+            name: "TestingHelpers"
         ),
         // MARK: - Tests
         .testTarget(
             name: "EngineTests",
-            dependencies: ["Engine"]
+            dependencies: ["Engine", "TestingHelpers"]
         ),
         .testTarget(
-            name: "MobileUITests",
-            dependencies: ["MobileUI"]
+            name: "CalendarKitTests",
+            dependencies: ["CalendarKit", "TestingHelpers"]
         ),
         .testTarget(
             name: "PresenterTests",
-            dependencies: ["Presenter"]
+            dependencies: ["Presenter", "TestingHelpers"]
         ),
     ]
 )
