@@ -8,6 +8,8 @@
 import Foundation
 
 public struct PageViewModel {
+    let month: Int
+    let year: Int
     let title: String
     let weekdays: [String]
     let dates: [CalendarDate]

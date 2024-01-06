@@ -1,11 +1,12 @@
 //
-//  Action.swift
-//  
+//  CalendarAction.swift
+//
 //
 //  Created by Petter vang Brakalsvålet on 06/12/2023.
 //
 
+import Foundation
+
 enum CalendarAction {
-    case didAppear
-    case didTapToday
+    case didSetPageTo(date: Date)
 }

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Presenter.swift
+//
 //
 //  Created by Petter vang Brakalsvålet on 06/12/2023.
 //
@@ -19,9 +19,6 @@ final class Presenter: PresenterType {
     
     private let dateService: DateServiceType
     
-    private var month: Int
-    private var year: Int
-    
     private let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = .current
@@ -34,19 +31,18 @@ final class Presenter: PresenterType {
         self.pageViewModels = []
         self.dateService = DateService()
         
-        let (year, month) = dateService.getComponents(from: startDate)
-        self.month = year
-        self.year = month
-        
         setPages(startOfWeek: startOfWeek)
     }
     
     internal func perform(action: CalendarAction) {
         switch action {
-        case .didAppear:
-            break
-        case .didTapToday:
-            break
+        case let .didSetPageTo(date):
+            let (year, month) = dateService.getComponents(from: date)
+            guard let page = pageViewModels.firstIndex(where: {
+                $0.year == year && $0.month == month
+            })
+            else { return }
+            updateViewModel(currentPage: page)
         }
     }
 }
@@ -68,21 +64,28 @@ private extension Presenter {
     
     func getRange() -> [(month: Int, year: Int)] {
         let calendar = Calendar.current
+        let thisMonth = calendar.component(.month, from: .now)
+        let thisYear = calendar.component(.year, from: .now)
+        
         var dateRange: [(month: Int, year: Int)] = []
         var date = viewModel.range.lowerBound
-        var index = 0
+        var page = 0
+        
         while date <= viewModel.range.upperBound {
             let month = calendar.component(.month, from: date)
             let year = calendar.component(.year, from: date)
             dateRange.append((month, year))
+            
+            if month == thisMonth, year == thisYear {
+                updateViewModel(currentPage: page)
+            }
+            
             guard let newDate = calendar.date(byAdding: .month, value: 1, to: date)
             else {
                 return dateRange
             }
-            index += 1
-            if calendar.isDate(newDate, inSameDayAs: .now) {
-                updateViewModel(currentPage: index)
-            }
+            
+            page += 1
             date = newDate
         }
         return dateRange
@@ -95,6 +98,7 @@ private extension Presenter {
         else { return nil }
         
         return PageViewModel(
+            month: month, year: year,
             title: formatter.string(from: date),
             weekdays: dateService.getWeekdayLabels(with: startOfWeek),
             dates: dateService.generateDates(from: firstDate, to: lastDate)

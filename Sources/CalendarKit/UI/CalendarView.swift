@@ -4,7 +4,6 @@ public struct CalendarView<DayView: View,
                            DayBackground: View,
                            WeekdayLabel: View>: View {
     @ObservedObject private var observer: Observer
-    private let presenter: Presenter
     
     // Custom Views
     private let customDayView: ((CalendarDate) -> DayView)?
@@ -21,7 +20,7 @@ public struct CalendarView<DayView: View,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
          onTap: @escaping (CalendarDate) -> Void) {
-        self.presenter = Presenter(startDate: startDate, range: range, startOfWeek: startOfWeek)
+        let presenter = Presenter(startDate: startDate, range: range, startOfWeek: startOfWeek)
         self.observer = Observer(presenter: presenter)
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground
@@ -37,9 +36,6 @@ public struct CalendarView<DayView: View,
             pages: observer.pages.map { page($0) },
             orientation: .horizontal
         )
-        .onAppear {
-            observer.perform(action: .didAppear)
-        }
     }
     
     @ViewBuilder
@@ -54,7 +50,7 @@ public struct CalendarView<DayView: View,
     private func titleStack(_ viewModel: PageViewModel) -> some View {
         Text(viewModel.title)
             .onTapGesture {
-                observer.perform(action: .didTapToday)
+                observer.perform(action: .didSetPageTo(date: .now))
             }
         .font(.title3)
     }
