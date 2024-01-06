@@ -15,13 +15,6 @@ final class DateServiceTests: XCTestCase {
     override func setUp() {
         sut = DateService(calendar: .init(identifier: .gregorian))
     }
-    
-//    func testPerformanceExample() throws {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
 }
 
 // MARK: - test_getComponents
@@ -391,5 +384,35 @@ extension DateServiceTests {
         let days = sut.generateDates(from: .december_8_2021_Wednesday,
                                      to: .january_1_2024_Monday)
         XCTAssertEqual(days.count, 755)
+    }
+    
+    func test_performance_generateDates_1Year() throws {
+        let calendar = Calendar(identifier: .gregorian)
+        let date = try XCTUnwrap(
+            calendar.date(byAdding: .year,value: -1,to: .january_1_2024_Monday)
+        )
+        measure {
+            _ = sut.generateDates(from: date, to: .january_1_2024_Monday)
+        }
+    }
+    
+    func test_performance_generateDates_10Years() throws {
+        let calendar = Calendar(identifier: .gregorian)
+        let date = try XCTUnwrap(
+            calendar.date(byAdding: .year,value: -10,to: .january_1_2024_Monday)
+        )
+        measure {
+            _ = sut.generateDates(from: date, to: .january_1_2024_Monday)
+        }
+    }
+    
+    func test_performance_generateDates_100Years() throws {
+        let calendar = Calendar(identifier: .gregorian)
+        let date = try XCTUnwrap(
+            calendar.date(byAdding: .year,value: -100,to: .january_1_2024_Monday)
+        )
+        measure {
+            _ = sut.generateDates(from: date, to: .january_1_2024_Monday)
+        }
     }
 }
