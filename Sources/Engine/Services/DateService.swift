@@ -7,30 +7,20 @@
 
 import Foundation
 
-public protocol DateServiceType {
-    func getComponents(from date: Date) -> (year: Int, month: Int)
-    func getWeekdayLabels(with startOfWeek: Weekday) -> [String]
-    func getStartDate(of month: Int, _ year: Int, with startOfWeek: Weekday) -> Date?
-    func getEndDate(from date: Date, with startOfWeek: Weekday) -> Date?
-    func generateDates(from start: Date, to end: Date) -> [Date]
-    func isDate(inMonth month: Int, _ date: Date) -> Bool
-    func isWeekday(_ date: Date) -> Bool
-}
-
-final class DateService: DateServiceType {
+public final class DateService: DateServiceType {
     private let calendar: Calendar
     
-    init(calendar: Calendar = .current) {
+    public init(calendar: Calendar = .current) {
         self.calendar = calendar
     }
     
-    func getComponents(from date: Date) -> (year: Int, month: Int) {
+    public func getComponents(from date: Date) -> (year: Int, month: Int) {
         let year = calendar.component(.year, from: date)
         let month = calendar.component(.month, from: date)
         return (year, month)
     }
     
-    func getWeekdayLabels(with startOfWeek: Weekday) -> [String] {
+    public func getWeekdayLabels(with startOfWeek: Weekday) -> [String] {
         calendar.shortWeekdaySymbols
             .rotate(toStartAt: startOfWeek.number - 1)
     }
@@ -41,7 +31,7 @@ final class DateService: DateServiceType {
         return (startWeekday - startOfWeek.number + 7) % 7
     }
     
-    func getStartDate(of month: Int, _ year: Int, with startOfWeek: Weekday) -> Date? {
+    public func getStartDate(of month: Int, _ year: Int, with startOfWeek: Weekday) -> Date? {
         let components = DateComponents(year: year, month: month, day: 1)
         guard let date = calendar.date(from: components)
         else { return nil }
@@ -58,7 +48,7 @@ final class DateService: DateServiceType {
         return (7 - daysToAddAfter + weekdayIndex) % 7
     }
     
-    func getEndDate(from date: Date, with startOfWeek: Weekday) -> Date? {
+    public func getEndDate(from date: Date, with startOfWeek: Weekday) -> Date? {
         guard let date = calendar.date(byAdding: .init(month: 1, day: -1), to: date)
         else { return nil }
         let daysToAddAfter = getDaysToAddAfter(date, with: startOfWeek)
@@ -67,7 +57,7 @@ final class DateService: DateServiceType {
         return endDate
     }
     
-    func generateDates(from start: Date, to end: Date) -> [Date] {
+    public func generateDates(from start: Date, to end: Date) -> [Date] {
         var currentDate = start
         var resultDates: [Date] = []
         
@@ -79,11 +69,11 @@ final class DateService: DateServiceType {
         return resultDates
     }
     
-    func isDate(inMonth month: Int, _ date: Date) -> Bool {
+    public func isDate(inMonth month: Int, _ date: Date) -> Bool {
         calendar.component(.month, from: date) == month
     }
     
-    func isWeekday(_ date: Date) -> Bool {
+    public func isWeekday(_ date: Date) -> Bool {
         let weekday = calendar.component(.weekday, from: date)
         
         switch weekday {

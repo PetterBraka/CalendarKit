@@ -5,7 +5,7 @@
 //  Created by Petter vang Brakalsvålet on 06/12/2023.
 //
 
-enum Update {
+public enum Update {
     case pages
     case viewModel
 }

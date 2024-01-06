@@ -1,17 +1,11 @@
 //
 //  Array+Ext.swift
+//  
 //
-//
-//  Created by Petter vang Brakalsvålet on 06/12/2023.
+//  Created by Petter vang Brakalsvålet on 06/01/2024.
 //
 
-extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        return stride(from: 0, to: count, by: size).map {
-            Array(self[$0 ..< Swift.min($0 + size, count)])
-        }
-    }
-}
+import Foundation
 
 extension Array where Element: Equatable {
     func rotate(toStartAt index: Index) -> [Element] {

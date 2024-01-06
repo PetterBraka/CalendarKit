@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Presenter
 
 final class Observer: ObservableObject, SceneType {
     private let presenter: Presenter

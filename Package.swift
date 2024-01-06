@@ -13,12 +13,33 @@ let package = Package(
             targets: ["CalendarKit"]),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "CalendarKit"),
+            name: "CalendarKit",
+            dependencies: ["MobileUI"]
+        ),
+        .target(
+            name: "Engine"
+        ),
+        .target(
+            name: "MobileUI",
+            dependencies: ["Presenter"]
+        ),
+        .target(
+            name: "Presenter",
+            dependencies: ["Engine"]
+        ),
+        // MARK: - Tests
         .testTarget(
-            name: "CalendarKitTests",
-            dependencies: ["CalendarKit"]),
+            name: "EngineTests",
+            dependencies: ["Engine"]
+        ),
+        .testTarget(
+            name: "MobileUITests",
+            dependencies: ["MobileUI"]
+        ),
+        .testTarget(
+            name: "PresenterTests",
+            dependencies: ["Presenter"]
+        ),
     ]
 )

@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import Engine
 
-final class Presenter: PresenterType {
+public final class Presenter: PresenterType {
     public weak var scene: SceneType?
     
-    private(set) var viewModel: ViewModel {
+    private(set) public var viewModel: ViewModel {
         didSet { scene?.perform(update: .viewModel) }
     }
-    private(set) var pageViewModels: [PageViewModel] {
+    private(set) public var pageViewModels: [PageViewModel] {
         didSet { scene?.perform(update: .pages) }
     }
     
@@ -26,7 +27,7 @@ final class Presenter: PresenterType {
         return formatter
     }()
     
-    internal init(startDate: Date, range: ClosedRange<Date>, startOfWeek: Weekday) {
+    public init(startDate: Date, range: ClosedRange<Date>, startOfWeek: ViewModel.Weekday) {
         self.viewModel = ViewModel(currentPage: 0, range: range)
         self.pageViewModels = []
         self.dateService = DateService()
@@ -34,7 +35,7 @@ final class Presenter: PresenterType {
         setPages(startOfWeek: startOfWeek)
     }
     
-    internal func perform(action: CalendarAction) {
+    public func perform(action: CalendarAction) {
         switch action {
         case let .didSetPageTo(date):
             let (year, month) = dateService.getComponents(from: date)
@@ -43,7 +44,7 @@ final class Presenter: PresenterType {
             })
             else { return }
             updateViewModel(currentPage: page)
-        case .didSet(page: let page):
+        case let .didSet(page):
             updateViewModel(currentPage: page)
         }
     }
@@ -57,12 +58,12 @@ private extension Presenter {
 }
 
 private extension Presenter {
-    func setPages(startOfWeek: Weekday) {
+    func setPages(startOfWeek: ViewModel.Weekday) {
         pageViewModels = getRange()
             .compactMap { [weak self] (page, month, year) in
                 self?.initPage(pageIndex: page,
                                month: month, year: year,
-                               startOfWeek: startOfWeek)
+                               startOfWeek: .init(from: startOfWeek))
             }
     }
     
@@ -106,13 +107,13 @@ private extension Presenter {
             title: formatter.string(from: date),
             weekdays: dateService.getWeekdayLabels(with: startOfWeek),
             dates: dateService.generateDates(from: firstDate, to: lastDate)
-                .map { [weak self] date -> CalendarDate in
-                    CalendarDate(
-                        date: date,
-                        isToday: Calendar.current.isDateInToday(date),
-                        isWeekday: self?.dateService.isWeekday(date) ?? false ,
-                        isThisMonth: self?.dateService.isDate(inMonth: month, date) ?? false
-                    )
+                .map { [weak self] date -> PageViewModel.CalendarDate in
+                        .init(
+                            date: date,
+                            isToday: Calendar.current.isDateInToday(date),
+                            isWeekday: self?.dateService.isWeekday(date) ?? false ,
+                            isThisMonth: self?.dateService.isDate(inMonth: month, date) ?? false
+                        )
                 }
         )
     }

@@ -1,8 +1,10 @@
 import SwiftUI
+import Presenter
 
 public struct CalendarView<DayView: View,
                            DayBackground: View,
                            WeekdayLabel: View>: View {
+    public typealias CalendarDate = PageViewModel.CalendarDate
     @ObservedObject private var observer: Observer
     
     // Custom Views
@@ -15,12 +17,16 @@ public struct CalendarView<DayView: View,
     
     init(startDate: Date = .now,
          range: ClosedRange<Date>,
-         startOfWeek: Weekday,
+         startOfWeek: ViewModel.Weekday,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
          onTap: @escaping (CalendarDate) -> Void) {
-        let presenter = Presenter(startDate: startDate, range: range, startOfWeek: startOfWeek)
+        let presenter = Presenter(
+            startDate: startDate,
+            range: range,
+            startOfWeek: startOfWeek
+        )
         self.observer = Observer(presenter: presenter)
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground

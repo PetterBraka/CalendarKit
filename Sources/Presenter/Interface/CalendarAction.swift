@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CalendarAction {
+public enum CalendarAction {
     case didSet(page: Int)
     case didSetPageTo(date: Date)
 }
