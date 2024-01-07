@@ -19,6 +19,7 @@ public final class Presenter: PresenterType {
     }
     
     private let dateService: DateServiceType
+    let startDate: Date
     
     private let formatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -31,6 +32,7 @@ public final class Presenter: PresenterType {
         self.viewModel = ViewModel(currentPage: 0, range: range)
         self.pageModels = []
         self.dateService = DateService()
+        self.startDate = startDate
         
         setPages(startOfWeek: startOfWeek)
     }
@@ -44,8 +46,10 @@ public final class Presenter: PresenterType {
             })
             else { return }
             updateViewModel(currentPage: page)
-        case let .didSet(page):
-            updateViewModel(currentPage: page)
+        case var .didSet(page):
+            if (0 ... pageModels.count).contains(page) {
+                updateViewModel(currentPage: page)
+            }
         }
     }
 }
@@ -68,32 +72,34 @@ private extension Presenter {
     }
     
     func getRange() -> [(page: Int, month: Int, year: Int)] {
-        let calendar = Calendar.current
-        let thisMonth = calendar.component(.month, from: .now)
-        let thisYear = calendar.component(.year, from: .now)
+        let (thisYear, thisMonth) = dateService.getComponents(from: startDate)
+        let (lowerYear, lowerMonth) = dateService.getComponents(from: viewModel.range.lowerBound)
+        let (upperYear, upperMonth) = dateService.getComponents(from: viewModel.range.upperBound)
         
-        var dateRange: [(page: Int, month: Int, year: Int)] = []
-        var date = viewModel.range.lowerBound
+        let years = Array(lowerYear ... upperYear)
+        let months = Array(1 ... 12)
+        
+        var monthsAndYears: [(page: Int, month: Int, year: Int)] = []
         var page = 0
         
-        while date <= viewModel.range.upperBound {
-            let month = calendar.component(.month, from: date)
-            let year = calendar.component(.year, from: date)
-            dateRange.append((page, month, year))
-            
-            if month == thisMonth, year == thisYear {
-                updateViewModel(currentPage: page)
+        for year in years {
+            for month in months {
+                if lowerYear == year && month < lowerMonth {
+                    continue
+                }
+                if month == thisMonth, year == thisYear {
+                    updateViewModel(currentPage: page)
+                }
+                
+                monthsAndYears.append((page, month, year))
+                if upperYear == year && upperMonth == month {
+                    return monthsAndYears
+                }
+                page += 1
             }
-            
-            guard let newDate = calendar.date(byAdding: .month, value: 1, to: date)
-            else {
-                return dateRange
-            }
-            
-            page += 1
-            date = newDate
         }
-        return dateRange
+        
+        return monthsAndYears
     }
 
     func initPage(pageIndex: Int, month: Int, year: Int, startOfWeek: Weekday) -> ViewModel.Page? {
@@ -108,12 +114,12 @@ private extension Presenter {
             weekdays: dateService.getWeekdayLabels(with: startOfWeek),
             dates: dateService.generateDates(from: firstDate, to: lastDate)
                 .map { [weak self] date -> ViewModel.CalendarDate in
-                        .init(
-                            date: date,
-                            isToday: Calendar.current.isDateInToday(date),
-                            isWeekday: self?.dateService.isWeekday(date) ?? false ,
-                            isThisMonth: self?.dateService.isDate(inMonth: month, date) ?? false
-                        )
+                    ViewModel.CalendarDate(
+                        date: date,
+                        isToday: Calendar.current.isDateInToday(date),
+                        isWeekday: self?.dateService.isWeekday(date) ?? false ,
+                        isThisMonth: self?.dateService.isDate(inMonth: month, date) ?? false
+                    )
                 }
         )
     }
