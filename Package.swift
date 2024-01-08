@@ -15,7 +15,10 @@ let package = Package(
     targets: [
         .target(
             name: "CalendarKit",
-            dependencies: ["Presenter"]
+            dependencies: ["Presenter", "PageView"]
+        ),
+        .target(
+            name: "PageView"
         ),
         .target(
             name: "Engine"
