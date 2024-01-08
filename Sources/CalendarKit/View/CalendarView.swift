@@ -73,7 +73,7 @@ public struct CalendarView<DayView: View,
     }
     
     public var body: some View {
-        if let selectedDate {
+        if selectedDate != nil {
             let selectionBinding = Binding {
                 observer.viewModel.currentPage
             } set: { page in
@@ -87,8 +87,8 @@ public struct CalendarView<DayView: View,
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.default, value: observer.viewModel.currentPage)
-            .onChange(of: observer.viewModel.selectedDate) { newDate in
-                self.selectedDate = newDate
+            .onChange(of: observer.viewModel.selectedDate) { _, newDate in
+                selectedDate = newDate
             }
         } else {
             PageView(
