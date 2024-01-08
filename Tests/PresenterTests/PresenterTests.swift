@@ -93,6 +93,50 @@ extension PresenterTests {
         XCTAssertEqual(sut.pageModels.flatMap(\.weekdays).uniqued(), givenWeekdays)
     }
     
+    func test_init_JanuaryToFebruary_startDate_beforeRange() throws {
+        let givenRange = Date.january_1_2024_Monday ... .february_1_2024_Thursday
+        setUpPresenter(
+            startDate: .february_6_1994_Sunday,
+            range: givenRange,
+            startOfWeek: .monday
+        )
+        XCTAssertEqual(sut.viewModel.currentPage, 0)
+        XCTAssertEqual(sut.viewModel.range, givenRange)
+        XCTAssertEqual(sut.pageModels.count, 2)
+        
+        XCTAssertEqual(sut.pageModels.map(\.pageIndex), [0, 1])
+        XCTAssertEqual(sut.pageModels.map(\.title), ["January 2024", "February 2024"])
+        XCTAssertEqual(sut.pageModels.map(\.month), [1, 2])
+        XCTAssertEqual(sut.pageModels.map(\.year), [2024, 2024])
+        let givenWeekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        XCTAssertEqual(sut.pageModels.map(\.weekdays),Array(repeating: givenWeekdays, count: 2))
+    }
+    
+    func test_init_2023To2024_startDate_pastRange() throws {
+        let givenRange = Date.january_1_2023_Sunday ... .january_1_2024_Monday
+        setUpPresenter(
+            startDate: .february_1_2024_Thursday,
+            range: givenRange,
+            startOfWeek: .monday
+        )
+        XCTAssertEqual(sut.viewModel.currentPage, 12)
+        XCTAssertEqual(sut.viewModel.range, givenRange)
+        XCTAssertEqual(sut.pageModels.count, 13)
+        
+        XCTAssertEqual(sut.pageModels.map(\.pageIndex),
+                       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+        XCTAssertEqual(sut.pageModels.map(\.title),
+                       ["January 2023", "February 2023", "March 2023", 
+                        "April 2023", "May 2023", "June 2023", "July 2023",
+                        "August 2023", "September 2023", "October 2023",
+                        "November 2023", "December 2023", "January 2024"])
+        XCTAssertEqual(sut.pageModels.map(\.month),
+                       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1])
+        XCTAssertEqual(sut.pageModels.map(\.year), [2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2024])
+        let givenWeekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        XCTAssertEqual(sut.pageModels.flatMap(\.weekdays).uniqued(), givenWeekdays)
+    }
+    
     func testPerformance_init() throws {
         measure {
             setUpPresenter(

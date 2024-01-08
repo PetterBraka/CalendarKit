@@ -47,7 +47,7 @@ public final class Presenter: PresenterType {
             else { return }
             updateViewModel(currentPage: page, selectedDate: date)
         case let .didSet(page):
-            if (0 ... pageModels.count).contains(page),
+            if (0 ... pageModels.count - 1).contains(page),
                let date = pageModels[page].dates.first(where: { $0.isThisMonth }) {
                 updateViewModel(currentPage: page, selectedDate: date.date)
             }
@@ -73,6 +73,9 @@ private extension Presenter {
                                month: month, year: year,
                                startOfWeek: .init(from: startOfWeek))
             }
+        if startDate > viewModel.range.upperBound {
+            perform(action: .didSet(page: pageModels.count - 1))
+        }
     }
     
     func getRange() -> [(page: Int, month: Int, year: Int)] {
