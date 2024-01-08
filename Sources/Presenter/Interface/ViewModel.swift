@@ -10,6 +10,7 @@ import Engine
 
 public struct ViewModel {
     public let currentPage: Int
+    public let selectedDate: Date
     public let range: ClosedRange<Date>
 }
 

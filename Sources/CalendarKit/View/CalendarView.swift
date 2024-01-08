@@ -1,11 +1,15 @@
 import SwiftUI
 import Presenter
+import PageView
 
 public struct CalendarView<DayView: View,
                            DayBackground: View,
                            WeekdayLabel: View>: View {
     public typealias CalendarDate = ViewModel.CalendarDate
     @ObservedObject private var observer: Observer
+    @Binding var selectedDate: Date?
+    
+    let orientation: Orientation
     
     // Custom Views
     private let customDayView: ((CalendarDate) -> DayView)?
@@ -18,6 +22,7 @@ public struct CalendarView<DayView: View,
     init(startDate: Date = .now,
          range: ClosedRange<Date>,
          startOfWeek: ViewModel.Weekday,
+         orientation: Orientation,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
@@ -28,34 +33,70 @@ public struct CalendarView<DayView: View,
             startOfWeek: startOfWeek
         )
         self.observer = Observer(presenter: presenter)
+        self.orientation = orientation
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground
         self.customWeekdayLabel = customWeekdayLabel
         self.onTap = onTap
+        _selectedDate = .constant(nil)
+        
+        presenter.scene = observer
+    }
+    
+    init(selectedDate: Binding<Date>,
+         range: ClosedRange<Date>,
+         startOfWeek: ViewModel.Weekday,
+         customDayView: ((CalendarDate) -> DayView)?,
+         customDayBackground: ((CalendarDate) -> DayBackground)?,
+         customWeekdayLabel: ((String) -> WeekdayLabel)?,
+         onTap: @escaping (CalendarDate) -> Void) {
+        let presenter = Presenter(
+            startDate: selectedDate.wrappedValue,
+            range: range,
+            startOfWeek: startOfWeek
+        )
+        self.observer = Observer(presenter: presenter)
+        self.orientation = .horizontal
+        self.customDayView = customDayView
+        self.customDayBackground = customDayBackground
+        self.customWeekdayLabel = customWeekdayLabel
+        self.onTap = onTap
+        _selectedDate = Binding {
+            selectedDate.wrappedValue
+        } set: { date in
+            if let date {
+                selectedDate.wrappedValue = date
+            }
+        }
         
         presenter.scene = observer
     }
     
     public var body: some View {
-//        PageView(
-//            initialIndex: observer.viewModel.currentPage,
-//            pages: observer.pages.map { page($0) },
-//            orientation: .horizontal
-//        )
-        
-        let selectionBinding = Binding {
-            observer.viewModel.currentPage
-        } set: { page in
-            observer.perform(action: .didSet(page: page))
-        }
-        TabView(selection: selectionBinding) {
-            ForEach(observer.pages, id: \.pageIndex) { model in
-                page(model)
-                    .tag(model.pageIndex)
+        if let selectedDate {
+            let selectionBinding = Binding {
+                observer.viewModel.currentPage
+            } set: { page in
+                observer.perform(action: .didSet(page: page))
             }
+            TabView(selection: selectionBinding) {
+                ForEach(observer.pages, id: \.pageIndex) { model in
+                    page(model)
+                        .tag(model.pageIndex)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .animation(.default, value: observer.viewModel.currentPage)
+            .onChange(of: observer.viewModel.selectedDate) { newDate in
+                self.selectedDate = newDate
+            }
+        } else {
+            PageView(
+                initialIndex: observer.viewModel.currentPage,
+                pages: observer.pages.map { page($0) },
+                orientation: .init(from: orientation)
+            )
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .animation(.default, value: observer.viewModel.currentPage)
     }
     
     @ViewBuilder
@@ -170,7 +211,7 @@ struct CalendarView_Previews: PreviewProvider {
         VStack {
             let start = Calendar.current.date(from: .init(year: 2022, month: 1, day: 1))!
             let end = Calendar.current.date(from: .init(year: 2024, month: 12, day: 1))!
-            CalendarView(range: start ... end, startOfWeek: .monday) { date in
+            CalendarView(range: start ... end, startOfWeek: .monday, orientation: .horizontal) { date in
                 print(date)
             }
             Spacer()

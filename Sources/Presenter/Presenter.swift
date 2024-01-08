@@ -29,7 +29,7 @@ public final class Presenter: PresenterType {
     }()
     
     public init(startDate: Date, range: ClosedRange<Date>, startOfWeek: ViewModel.Weekday) {
-        self.viewModel = ViewModel(currentPage: 0, range: range)
+        self.viewModel = ViewModel(currentPage: 0, selectedDate: startDate, range: range)
         self.pageModels = []
         self.dateService = DateService()
         self.startDate = startDate
@@ -45,18 +45,22 @@ public final class Presenter: PresenterType {
                 $0.year == year && $0.month == month
             })
             else { return }
-            updateViewModel(currentPage: page)
-        case var .didSet(page):
-            if (0 ... pageModels.count).contains(page) {
-                updateViewModel(currentPage: page)
+            updateViewModel(currentPage: page, selectedDate: date)
+        case let .didSet(page):
+            if (0 ... pageModels.count).contains(page),
+               let date = pageModels[page].dates.first(where: { $0.isThisMonth }) {
+                updateViewModel(currentPage: page, selectedDate: date.date)
             }
         }
     }
 }
 
 private extension Presenter {
-    func updateViewModel(currentPage: Int? = nil, range: ClosedRange<Date>? = nil) {
+    func updateViewModel(currentPage: Int? = nil, 
+                         selectedDate: Date? = nil,
+                         range: ClosedRange<Date>? = nil) {
         viewModel = ViewModel(currentPage: currentPage ?? viewModel.currentPage,
+                              selectedDate: selectedDate ?? viewModel.selectedDate,
                               range: range ?? viewModel.range)
     }
 }

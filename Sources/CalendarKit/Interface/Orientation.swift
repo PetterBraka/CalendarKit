@@ -1,18 +1,18 @@
 //
 //  Orientation.swift
+//  
 //
-//
-//  Created by Petter vang Brakalsvålet on 01/01/2024.
+//  Created by Petter vang Brakalsvålet on 08/01/2024.
 //
 
-import UIKit
+import PageView
 
 public enum Orientation {
     case horizontal
     case vertical
 }
 
-extension UIPageViewController.NavigationOrientation {
+extension PageOrientation {
     init(from orientation: Orientation) {
         switch orientation {
         case .horizontal:

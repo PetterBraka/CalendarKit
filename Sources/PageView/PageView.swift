@@ -11,13 +11,13 @@ public struct PageView<Page: View>: UIViewControllerRepresentable {
     private let pages: [UIViewController]
     private let initialIndex: Int
     private let transition: PageTransition
-    private let orientation: Orientation
+    private let orientation: PageOrientation
     
     public init(
         initialIndex: Int,
         pages: [Page],
         transition: PageTransition = .pageCurl,
-        orientation: Orientation
+        orientation: PageOrientation
     ) {
         self.initialIndex = initialIndex
         self.pages = pages.map { UIHostingController(rootView: $0) }
