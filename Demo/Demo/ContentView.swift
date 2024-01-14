@@ -11,44 +11,56 @@ import CalendarKit
 let calendar = Calendar.current
 
 struct ContentView: View {
-    let start = calendar.date(from: .init(year: 2022, month: 1))!
-    let end = calendar.date(from: .init(year: 2024, month: 12))!
+    @State var start = calendar.date(from: .init(year: 2022, month: 1))!
+    @State var end = calendar.date(from: .init(year: 2024, month: 12))!
+    @State var selectedDate = Date.now
     
-    @State var index = 0
-    @State var date = Date.now
+    @State var enabledJumpTo = false
+    @State var startOfWeek = "monday"
     
     var body: some View {
-        VStack {
-            Text("Calendar demo")
-            
-            CalendarView(selectedDate: $date,
-                         range: start ... end,
-                         startOfWeek: .monday) { date in
-                print(date)
-            }
-            
-            VStack {
-                Button("Set date - 2023 Jan 1") {
-                    date = Calendar.current.date(from: .init(year: 2023, month: 1))!
+        NavigationStack {
+            List {
+                DatePicker(
+                    "Start date",
+                    selection: $start,
+                    displayedComponents: .date
+                )
+                DatePicker(
+                    "End date",
+                    selection: $end,
+                    displayedComponents: .date
+                )
+                if enabledJumpTo {
+                    DatePicker(
+                        "Selected date",
+                        selection: $selectedDate,
+                        displayedComponents: .date
+                    )
                 }
-                Button("Set date - 2023 Dec 1") {
-                    date = Calendar.current.date(from: .init(year: 2023, month: 12))!
+                Toggle("Enable jump to date", isOn: $enabledJumpTo)
+                let weekdays = ["monday", "tuesday", "wednesday", "thursday",
+                                "friday", "saturday", "sunday"]
+                Picker(selection: $startOfWeek) {
+                    ForEach(weekdays, id: (\.self)) { weekday in
+                        Button(weekday.capitalized) {
+                            startOfWeek = weekday
+                        }
+                    }
+                } label: {
+                    Text("Start of the week")
                 }
-                Button("Set date - 2023 June 1") {
-                    date = Calendar.current.date(from: .init(year: 2023, month: 6))!
-                }
+                NavigationLink("Open Calendar", value: "Open")
             }
-            .padding(.all)
-            
-            CalendarView(range: start ... end,
-                         startOfWeek: .monday,
-                         orientation: .horizontal) {  date in
-                print(date)
+            .navigationTitle("Calendar demo")
+            .navigationDestination(for: String.self) { _ in
+                CalendarDemo(start: start, end: end,
+                             selectedDate: $selectedDate,
+                             enabledJumpTo: enabledJumpTo,
+                             startOfWeek: startOfWeek)
             }
-
-            Spacer()
-                .layoutPriority(0)
         }
+        .toolbarTitleDisplayMode(.large)
     }
 }
 
