@@ -25,6 +25,7 @@ extension CalendarKitTests {
                          customDayView: { _ in EmptyView() },
                          customDayBackground: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
+                         customMonthLabel: { _ in EmptyView() },
                          onTap: { _ in })
     }
     
@@ -71,7 +72,18 @@ extension CalendarKitTests {
                          onTap: { _ in })
     }
     
-    func test_default_init_startDateCustomDayViewCustomWeekdayLabel() throws {
+    func test_default_init_startDateCustomMonthLabel() throws {
+        let start = try Date(year: 2022, month: 1, day: 1)
+        let end = try Date(year: 2024, month: 12, day: 1)
+        _ = CalendarView(startDate: start,
+                         range: start ... end,
+                         startOfWeek: .monday,
+                         orientation: .horizontal,
+                         customMonthLabel: { _ in EmptyView() },
+                         onTap: { _ in })
+    }
+    
+    func test_default_init_startDateCustomDayViewWeekdayLabel() throws {
         let start = try Date(year: 2022, month: 1, day: 1)
         let end = try Date(year: 2024, month: 12, day: 1)
         _ = CalendarView(startDate: start,
@@ -83,19 +95,31 @@ extension CalendarKitTests {
                          onTap: { _ in })
     }
     
-    func test_default_init_startDateCustomDayViewCustomDayBackgroundCustomWeekdayLabel() throws {
+    func test_default_init_startDateCustomDayViewWeekdayLabelMonthLabel() throws {
         let start = try Date(year: 2022, month: 1, day: 1)
         let end = try Date(year: 2024, month: 12, day: 1)
         _ = CalendarView(startDate: start,
                          range: start ... end,
                          startOfWeek: .monday,
-                         orientation: .horizontal) { _ in
-            EmptyView()
-        } customDayBackground: { _ in
-            EmptyView()
-        } customWeekdayLabel: { _ in
-            EmptyView()
-        } onTap: { _ in}
+                         orientation: .horizontal,
+                         customDayView: { _ in EmptyView() },
+                         customWeekdayLabel: { _ in EmptyView() },
+                         customMonthLabel: { _ in EmptyView() },
+                         onTap: { _ in })
+    }
+    
+    func test_default_init_startDateCustomDayViewDayBackgroundWeekdayLabelMonthLabel() throws {
+        let start = try Date(year: 2022, month: 1, day: 1)
+        let end = try Date(year: 2024, month: 12, day: 1)
+        _ = CalendarView(startDate: start,
+                         range: start ... end,
+                         startOfWeek: .monday,
+                         orientation: .horizontal, 
+                         customDayView: { _ in EmptyView() },
+                         customDayBackground: { _ in EmptyView() },
+                         customWeekdayLabel: { _ in EmptyView() },
+                         customMonthLabel: { _ in EmptyView() },
+                         onTap: { _ in })
     }
 }
 
@@ -140,7 +164,17 @@ extension CalendarKitTests {
                          onTap: { _ in})
     }
     
-    func test_default_selectedDateInitCustomDayViewCustomWeekdayLabel() throws {
+    func test_default_selectedDateInitCustomMonthLabel() throws {
+        let start = try Date(year: 2022, month: 1, day: 1)
+        let end = try Date(year: 2024, month: 12, day: 1)
+        _ = CalendarView(selectedDate: .constant(start),
+                         range: start ... end,
+                         startOfWeek: .monday,
+                         customMonthLabel: { _ in EmptyView() },
+                         onTap: { _ in})
+    }
+    
+    func test_default_selectedDateInitCustomDayViewWeekdayLabel() throws {
         let start = try Date(year: 2022, month: 1, day: 1)
         let end = try Date(year: 2024, month: 12, day: 1)
         _ = CalendarView(selectedDate: .constant(start),
@@ -151,7 +185,19 @@ extension CalendarKitTests {
                          onTap: { _ in})
     }
     
-    func test_default_selectedDateInitCustomDayViewCustomDayBackgroundCustomWeekdayLabel() throws {
+    func test_default_selectedDateInitCustomDayViewWeekdayLabelMonthLabel() throws {
+        let start = try Date(year: 2022, month: 1, day: 1)
+        let end = try Date(year: 2024, month: 12, day: 1)
+        _ = CalendarView(selectedDate: .constant(start),
+                         range: start ... end,
+                         startOfWeek: .monday,
+                         customDayView: { _ in EmptyView() },
+                         customWeekdayLabel: { _ in EmptyView() },
+                         customMonthLabel: { _ in EmptyView() },
+                         onTap: { _ in})
+    }
+    
+    func test_default_selectedDateInitCustomDayViewDayBackgroundWeekdayLabelMonthLabel() throws {
         let start = try Date(year: 2022, month: 1, day: 1)
         let end = try Date(year: 2024, month: 12, day: 1)
         _ = CalendarView(selectedDate: .constant(start),
@@ -160,6 +206,7 @@ extension CalendarKitTests {
                          customDayView: { _ in EmptyView() },
                          customDayBackground: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
+                         customMonthLabel: { _ in EmptyView() },
                          onTap: { _ in})
     }
 }

@@ -4,7 +4,8 @@ import PageView
 
 public struct CalendarView<DayView: View,
                            DayBackground: View,
-                           WeekdayLabel: View>: View {
+                           WeekdayLabel: View,
+                           MonthLabel: View>: View {
     public typealias CalendarDate = ViewModel.CalendarDate
     @ObservedObject private var observer: Observer
     @Binding var selectedDate: Date?
@@ -15,6 +16,7 @@ public struct CalendarView<DayView: View,
     private let customDayView: ((CalendarDate) -> DayView)?
     private let customDayBackground: ((CalendarDate) -> DayBackground)?
     private let customWeekdayLabel: ((String) -> WeekdayLabel)?
+    private let customMonthLabel: ((String) -> MonthLabel)?
     
     // Actions
     private let onTap: (CalendarDate) -> Void
@@ -26,6 +28,7 @@ public struct CalendarView<DayView: View,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
+         customMonthLabel: ((String) -> MonthLabel)?,
          onTap: @escaping (CalendarDate) -> Void) {
         let presenter = Presenter(
             startDate: startDate,
@@ -37,6 +40,7 @@ public struct CalendarView<DayView: View,
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground
         self.customWeekdayLabel = customWeekdayLabel
+        self.customMonthLabel = customMonthLabel
         self.onTap = onTap
         _selectedDate = .constant(nil)
         
@@ -49,6 +53,7 @@ public struct CalendarView<DayView: View,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
+         customMonthLabel: ((String) -> MonthLabel)?,
          onTap: @escaping (CalendarDate) -> Void) {
         let presenter = Presenter(
             startDate: selectedDate.wrappedValue,
@@ -60,6 +65,7 @@ public struct CalendarView<DayView: View,
         self.customDayView = customDayView
         self.customDayBackground = customDayBackground
         self.customWeekdayLabel = customWeekdayLabel
+        self.customMonthLabel = customMonthLabel
         self.onTap = onTap
         _selectedDate = Binding {
             selectedDate.wrappedValue
@@ -102,7 +108,11 @@ public struct CalendarView<DayView: View,
     @ViewBuilder
     private func page(_ viewModel: ViewModel.Page) -> some View {
         VStack(spacing: 0) {
-            titleStack(viewModel)
+            if let customMonthLabel {
+                customMonthLabel(viewModel.title)
+            } else {
+                titleStack(viewModel)
+            }
             monthView(viewModel)
         }
     }
