@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CalendarKit
+import Presenter
 
 struct CalendarDemo: View {
     var start: Date
@@ -14,12 +15,29 @@ struct CalendarDemo: View {
     @Binding var selectedDate: Date
     var enabledJumpTo: Bool
     var startOfWeek: String
+    var weekday: ViewModel.Weekday {
+        switch startOfWeek {
+        case "monday":
+            return .monday
+        case "tuesday":
+            return .tuesday
+        case"wednesday":
+            return .wednesday
+        case"thursday":
+            return .thursday
+        case"friday":
+            return .friday
+        case"saturday":
+            return .saturday
+        default:
+            return .sunday
+        }
+    }
     
     var body: some View {
         VStack {
             calendar
             Spacer()
-                .layoutPriority(0)
         }
     }
     
@@ -29,57 +47,13 @@ struct CalendarDemo: View {
             CalendarView(
                 selectedDate: $selectedDate,
                 range: start ... end,
-                startOfWeek: {
-                    if startOfWeek == "monday" {
-                        return .monday
-                    }
-                    else if startOfWeek == "tuesday" {
-                        return .tuesday
-                    }
-                    else if startOfWeek == "wednesday" {
-                        return .wednesday
-                    }
-                    else if startOfWeek == "thursday" {
-                        return .thursday
-                    }
-                    else if startOfWeek == "friday" {
-                        return .friday
-                    }
-                    else if startOfWeek == "saturday" {
-                        return .saturday
-                    }
-                    else {
-                        return .sunday
-                    }
-                }()) { date in
+                startOfWeek: weekday) { date in
                     print(date)
                 }
         } else {
             CalendarView(
                 range: start ... end,
-                startOfWeek: {
-                    if startOfWeek == "monday" {
-                        return .monday
-                    }
-                    else if startOfWeek == "tuesday" {
-                        return .tuesday
-                    }
-                    else if startOfWeek == "wednesday" {
-                        return .wednesday
-                    }
-                    else if startOfWeek == "thursday" {
-                        return .thursday
-                    }
-                    else if startOfWeek == "friday" {
-                        return .friday
-                    }
-                    else if startOfWeek == "saturday" {
-                        return .saturday
-                    }
-                    else {
-                        return .sunday
-                    }
-                }(),
+                startOfWeek: weekday,
                 orientation: .horizontal) {  date in
                     print(date)
                 }
