@@ -13,6 +13,10 @@ public final class DateService: DateServiceType {
     public init(calendar: Calendar = .current) {
         self.calendar = calendar
     }
+
+    public func getDayComponent(from date: Date) -> Int {
+        calendar.component(.day, from: date)
+    }
     
     public func getComponents(from date: Date) -> (year: Int, month: Int) {
         let year = calendar.component(.year, from: date)
@@ -73,6 +77,10 @@ public final class DateService: DateServiceType {
         }
         
         return resultDates
+    }
+    
+    public func isDateInToday(from date: Date) -> Bool {
+        calendar.isDateInToday(date)
     }
     
     public func isDate(inMonth month: Int, _ date: Date) -> Bool {

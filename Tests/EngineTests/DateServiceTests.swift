@@ -19,6 +19,11 @@ final class DateServiceTests: XCTestCase {
 
 // MARK: - test_getComponents
 extension DateServiceTests {
+    func test_getDayComponent() {
+        let day = sut.getDayComponent(from: .december_8_2021_Wednesday)
+        XCTAssertEqual(day, 8)
+    }
+    
     func test_getComponents_january_1_2024_Monday() {
         let components = sut.getComponents(from: .january_1_2024_Monday)
         XCTAssertEqual(components.month, 1)
@@ -269,6 +274,17 @@ extension DateServiceTests {
             sut.getEndDate(from: .january_1_2024_Monday, with: .monday),
             try Date(year: 2024, month: 2, day: 5)
         )
+    }
+}
+
+// MARK: - test_isDateInToday
+extension DateServiceTests {
+    func test_isDateInToday_isToday() {
+        XCTAssertEqual(sut.isDateInToday(from: .now), true)
+    }
+    
+    func test_isDateInToday_notToday() {
+        XCTAssertEqual(sut.isDateInToday(from: .february_6_1994_Sunday), false)
     }
 }
 

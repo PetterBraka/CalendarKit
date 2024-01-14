@@ -82,7 +82,7 @@ private extension Presenter {
         let (thisYear, thisMonth) = dateService.getComponents(from: startDate)
         let (lowerYear, lowerMonth) = dateService.getComponents(from: viewModel.range.lowerBound)
         let (upperYear, upperMonth) = dateService.getComponents(from: viewModel.range.upperBound)
-        
+
         let years = Array(lowerYear ... upperYear)
         let months = Array(1 ... 12)
         
@@ -120,12 +120,14 @@ private extension Presenter {
             title: formatter.string(from: date),
             weekdays: dateService.getWeekdayLabels(with: startOfWeek),
             dates: dateService.generateDates(from: firstDate, to: lastDate)
-                .map { [weak self] date -> ViewModel.CalendarDate in
-                    ViewModel.CalendarDate(
+                .compactMap { [weak self] date -> ViewModel.CalendarDate? in
+                    guard let self else { return nil }
+                    return ViewModel.CalendarDate(
                         date: date,
-                        isToday: Calendar.current.isDateInToday(date),
-                        isWeekday: self?.dateService.isWeekday(date) ?? false ,
-                        isThisMonth: self?.dateService.isDate(inMonth: month, date) ?? false
+                        day: self.dateService.getDayComponent(from: date),
+                        isToday: self.dateService.isDateInToday(from: date),
+                        isWeekday: self.dateService.isWeekday(date),
+                        isThisMonth: self.dateService.isDate(inMonth: month, date)
                     )
                 }
         )
