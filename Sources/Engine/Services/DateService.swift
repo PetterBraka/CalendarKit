@@ -24,9 +24,19 @@ public final class DateService: DateServiceType {
         return (year, month)
     }
     
-    public func getWeekdayLabels(with startOfWeek: Weekday) -> [String] {
-        calendar.shortWeekdaySymbols
+    public func getWeekdayLabels(with startOfWeek: Weekday) -> [(short: String, long: String)] {
+        let shortLabels = calendar.shortWeekdaySymbols
             .rotate(toStartAt: startOfWeek.number - 1)
+        let longLabels = calendar.weekdaySymbols
+            .rotate(toStartAt: startOfWeek.number - 1)
+        return Array(zip(shortLabels, longLabels))
+    }
+    
+    public func getWeekdayLabel(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        formatter.locale = calendar.locale
+        return formatter.string(from: date)
     }
     
     func getDaysToAddBefore(_ startOfMonth: Date, with startOfWeek: Weekday) -> Int {

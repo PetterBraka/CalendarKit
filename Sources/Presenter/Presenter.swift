@@ -125,6 +125,7 @@ private extension Presenter {
                     return ViewModel.CalendarDate(
                         date: date,
                         day: self.dateService.getDayComponent(from: date),
+                        weekday: self.dateService.getWeekdayLabel(from: date),
                         isToday: self.dateService.isDateInToday(from: date),
                         isWeekday: self.dateService.isWeekday(date),
                         isThisMonth: self.dateService.isDate(inMonth: month, date)

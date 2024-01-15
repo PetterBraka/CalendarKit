@@ -81,6 +81,16 @@ public struct CalendarView<DayView: View,
     }
     
     public var body: some View {
+        content
+            .contentShape(Rectangle())
+            .accessibilityLabel(
+                observer.viewModel.selectedDate.formatted(date: .long,
+                                                          time: .omitted)
+            )
+    }
+    
+    @ViewBuilder
+    private var content: some View {
         if selectedDate != nil {
             let selectionBinding = Binding {
                 observer.viewModel.currentPage
@@ -94,6 +104,26 @@ public struct CalendarView<DayView: View,
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            .accessibilityAction(named: "Next month") {
+                if observer.pages.count < observer.viewModel.currentPage {
+                    selectionBinding.wrappedValue += 1
+                } else {
+                    UIAccessibility.post(
+                        notification: .announcement,
+                        argument: "On last month"
+                    )
+                }
+            }
+            .accessibilityAction(named: "Previous month") {
+                if observer.viewModel.currentPage > 0 {
+                    selectionBinding.wrappedValue -= 1
+                } else {
+                    UIAccessibility.post(
+                        notification: .announcement,
+                        argument: "On first month"
+                    )
+                }
+            }
             .animation(.default, value: observer.viewModel.currentPage)
             .onChange(of: observer.viewModel.selectedDate) { _, newDate in
                 selectedDate = newDate
@@ -111,6 +141,7 @@ public struct CalendarView<DayView: View,
     private func page(_ viewModel: ViewModel.Page) -> some View {
         VStack(spacing: 0) {
             titleStack(viewModel)
+                .accessibilityHeading(.h1)
             monthView(viewModel)
         }
     }
@@ -130,7 +161,8 @@ public struct CalendarView<DayView: View,
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(.white)
                 .background {
-                    Color.accentColor.opacity(0.75)
+                    Color.accentColor
+                        .contrast(0.75)
                 }
                 .clipShape(.rect(topLeadingRadius: cornerRadius,
                                  topTrailingRadius: cornerRadius))
@@ -143,6 +175,8 @@ private extension CalendarView {
     func monthView(_ viewModel: ViewModel.Page) -> some View {
         Grid(alignment: .center, horizontalSpacing: 0, verticalSpacing: 0) {
             weekdayLabels(viewModel)
+                .accessibilityHeading(.h2)
+                .dynamicTypeSize(.xSmall ... .xxxLarge)
             monthCells(viewModel)
         }
         .contentShape(Rectangle())
@@ -151,24 +185,27 @@ private extension CalendarView {
     @ViewBuilder
     func weekdayLabels(_ viewModel: ViewModel.Page) -> some View {
         GridRow {
-            ForEach(viewModel.weekdays, id: \.self) { day in
-                if let customWeekdayLabel {
-                    customWeekdayLabel(day)
-                } else {
-                    Text(day)
-                        .font(.headline.bold())
-                        .foregroundStyle(Color.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .background {
-                            ZStack {
+            ForEach(viewModel.weekdays, id: \.long.self) { (short, long) in
+                Group {
+                    if let customWeekdayLabel {
+                        customWeekdayLabel(short)
+                    } else {
+                        Text(short)
+                            .font(.headline.bold())
+                            .foregroundStyle(Color.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background {
                                 Color.accentColor.opacity(0.2)
+                            }
+                            .background {
                                 Rectangle()
                                     .fill(.clear)
                                     .border(.black, width: 0.25)
                             }
-                        }
+                    }
                 }
+                .accessibilityLabel(long)
             }
         }
     }
@@ -177,11 +214,28 @@ private extension CalendarView {
     func monthCells(_ viewModel: ViewModel.Page) -> some View {
         ForEach(viewModel.dates.chunked(into: 7), id: \.self) { week in
             GridRow {
-                ForEach(week, id: \.date) { date in
-                    if let customDayView {
-                        customDayView(date)
-                    } else {
-                        dayView(date: date)
+                ForEach(week, id: \.date) { day in
+                    Group {
+                        if let customDayView {
+                            customDayView(day)
+                        } else {
+                            dayView(date: day)
+                        }
+                    }
+                    .accessibilityLabel(
+                        day.date.formatted(
+                            Date.FormatStyle()
+                                .year(.twoDigits)
+                                .month(.twoDigits)
+                                .day(.twoDigits)
+                                .weekday(.wide)
+                                .locale(.current)
+                        )
+                    )
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityRemoveTraits(.isStaticText)
+                    .accessibilityAction {
+                        onTap(day)
                     }
                 }
             }
@@ -207,6 +261,7 @@ private extension CalendarView {
                     dayBackground(date: date)
                 }
             }
+            .contentShape(Rectangle())
             .opacity(date.isThisMonth ? 1 : 0.25)
             .onTapGesture {
                 onTap(date)

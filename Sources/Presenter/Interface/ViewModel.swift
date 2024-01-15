@@ -20,13 +20,14 @@ extension ViewModel {
         public let month: Int
         public let year: Int
         public let title: String
-        public let weekdays: [String]
+        public let weekdays: [(short: String, long: String)]
         public let dates: [CalendarDate]
     }
 
     public struct CalendarDate: Hashable {
         public let date: Date
         public let day: Int
+        public let weekday: String
         public let isToday: Bool
         public let isWeekday: Bool
         public let isThisMonth: Bool
