@@ -16,7 +16,7 @@ struct CustomCalendarView: View {
     var orientation: Orientation
     var enabledJumpTo: Bool
     var startOfWeek: String
-    var weekday: ViewModel.Weekday {
+    var weekday: Weekday {
         switch startOfWeek {
         case "monday":
             return .monday

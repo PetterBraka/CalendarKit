@@ -1,5 +1,4 @@
 import SwiftUI
-import Presenter
 import PageView
 
 public struct CalendarView<DayView: View,
@@ -25,7 +24,7 @@ public struct CalendarView<DayView: View,
     
     init(startDate: Date = .now,
          range: ClosedRange<Date>,
-         startOfWeek: ViewModel.Weekday,
+         startOfWeek: Weekday,
          orientation: Orientation,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
@@ -51,7 +50,7 @@ public struct CalendarView<DayView: View,
     
     init(selectedDate: Binding<Date>,
          range: ClosedRange<Date>,
-         startOfWeek: ViewModel.Weekday,
+         startOfWeek: Weekday,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Engine
 
 public struct ViewModel {
     public let currentPage: Int
@@ -31,20 +30,10 @@ extension ViewModel {
         public let isWeekday: Bool
         public let isThisMonth: Bool
     }
-    
-    public enum Weekday {
-        case monday
-        case tuesday
-        case wednesday
-        case thursday
-        case friday
-        case saturday
-        case sunday
-    }
 }
 
-extension Engine.Weekday {
-    init(from weekday: ViewModel.Weekday) {
+extension Weekday {
+    init(from weekday: Weekday) {
         switch weekday {
         case .monday:
             self = .monday

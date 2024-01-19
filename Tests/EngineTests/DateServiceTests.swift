@@ -5,7 +5,7 @@
 //  Created by Petter vang Brakalsvålet on 06/01/2024.
 //
 
-@testable import Engine
+@testable import CalendarKit
 import TestingHelpers
 import XCTest
 

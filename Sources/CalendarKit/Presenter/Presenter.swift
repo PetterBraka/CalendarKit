@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Engine
 
 public final class Presenter: PresenterType {
     public weak var scene: SceneType?
@@ -28,7 +27,7 @@ public final class Presenter: PresenterType {
         return formatter
     }()
     
-    public init(startDate: Date, range: ClosedRange<Date>, startOfWeek: ViewModel.Weekday) {
+    public init(startDate: Date, range: ClosedRange<Date>, startOfWeek: Weekday) {
         self.viewModel = ViewModel(currentPage: 0, selectedDate: startDate, range: range)
         self.pageModels = []
         self.dateService = DateService()
@@ -66,7 +65,7 @@ private extension Presenter {
 }
 
 private extension Presenter {
-    func setPages(startOfWeek: ViewModel.Weekday) {
+    func setPages(startOfWeek: Weekday) {
         pageModels = getRange()
             .compactMap { [weak self] (page, month, year) in
                 self?.initPage(pageIndex: page,

@@ -15,17 +15,10 @@ let package = Package(
     targets: [
         .target(
             name: "CalendarKit",
-            dependencies: ["Presenter", "PageView"]
+            dependencies: ["PageView"]
         ),
         .target(
             name: "PageView"
-        ),
-        .target(
-            name: "Engine"
-        ),
-        .target(
-            name: "Presenter",
-            dependencies: ["Engine"]
         ),
         .target(
             name: "TestingHelpers"
@@ -33,7 +26,7 @@ let package = Package(
         // MARK: - Tests
         .testTarget(
             name: "EngineTests",
-            dependencies: ["Engine", "TestingHelpers"]
+            dependencies: ["CalendarKit", "TestingHelpers"]
         ),
         .testTarget(
             name: "CalendarKitTests",
@@ -41,7 +34,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PresenterTests",
-            dependencies: ["Presenter", "TestingHelpers"]
+            dependencies: ["CalendarKit", "TestingHelpers"]
         ),
     ]
 )

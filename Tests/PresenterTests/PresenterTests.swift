@@ -5,7 +5,7 @@
 //  Created by Petter vang Brakalsvålet on 06/01/2024.
 //
 
-@testable import Presenter
+@testable import CalendarKit
 import TestingHelpers
 import XCTest
 
@@ -14,7 +14,7 @@ final class PresenterTests: XCTestCase {
 
     func setUpPresenter(startDate: Date, 
                         range: ClosedRange<Date>,
-                        startOfWeek: ViewModel.Weekday) {
+                        startOfWeek: Weekday) {
         sut = Presenter(startDate: startDate, range: range, startOfWeek: startOfWeek)
     }
 }

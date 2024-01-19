@@ -15,7 +15,7 @@ struct CalendarDemo: View {
     @Binding var selectedDate: Date
     var enabledJumpTo: Bool
     var startOfWeek: String
-    var weekday: ViewModel.Weekday {
+    var weekday: Weekday {
         switch startOfWeek {
         case "monday":
             return .monday
@@ -37,6 +37,7 @@ struct CalendarDemo: View {
     var body: some View {
         VStack {
             calendar
+                .border(.red)
             Spacer()
         }
     }
