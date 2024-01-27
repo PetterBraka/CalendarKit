@@ -26,11 +26,11 @@ public struct CalendarView<DayView: View,
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
-         customMonthLabel: ((String) -> MonthLabel)?,
-         onTap: @escaping (CalendarDate) -> Void) {
+         customMonthLabel: ((String) -> MonthLabel)?) {
         let presenter = Presenter(
             startDate: startDate,
             range: range,
@@ -51,11 +51,11 @@ public struct CalendarView<DayView: View,
     init(selectedDate: Binding<Date>,
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
          customDayView: ((CalendarDate) -> DayView)?,
          customDayBackground: ((CalendarDate) -> DayBackground)?,
          customWeekdayLabel: ((String) -> WeekdayLabel)?,
-         customMonthLabel: ((String) -> MonthLabel)?,
-         onTap: @escaping (CalendarDate) -> Void) {
+         customMonthLabel: ((String) -> MonthLabel)?) {
         let presenter = Presenter(
             startDate: selectedDate.wrappedValue,
             range: range,

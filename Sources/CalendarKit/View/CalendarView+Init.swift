@@ -17,9 +17,9 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView,
          onTap: @escaping (ViewModel.CalendarDate) -> Void) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
+                  customWeekdayLabel: nil, customMonthLabel: nil)
         
     }
 }
@@ -29,13 +29,13 @@ extension CalendarView where DayView == EmptyView, WeekdayLabel == EmptyView, Mo
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
-         customDayBackground: @escaping (ViewModel.CalendarDate) -> DayBackground,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
+         customDayBackground: @escaping (ViewModel.CalendarDate) -> DayBackground) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: customDayBackground,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
+                  customWeekdayLabel: nil, customMonthLabel: nil)
         
     }
 }
@@ -45,14 +45,14 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView, M
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
-         customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
+         customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
                   customWeekdayLabel: customWeekdayLabel,
-                  customMonthLabel: nil,
-                  onTap: onTap)
+                  customMonthLabel: nil)
         
     }
 }
@@ -62,13 +62,13 @@ extension CalendarView where DayBackground == EmptyView, WeekdayLabel == EmptyVi
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
-         customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
+         customDayView: @escaping (ViewModel.CalendarDate) -> DayView) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
+                  customWeekdayLabel: nil, customMonthLabel: nil)
         
     }
 }
@@ -78,13 +78,13 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView, W
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
-         customMonthLabel: @escaping (String) -> MonthLabel,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
+         customMonthLabel: @escaping (String) -> MonthLabel) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: customMonthLabel,
-                  onTap: onTap)
+                  customWeekdayLabel: nil, customMonthLabel: customMonthLabel)
         
     }
 }
@@ -94,14 +94,14 @@ extension CalendarView where DayBackground == EmptyView, MonthLabel == EmptyView
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
          customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
-         customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil,
-                  onTap: onTap)
+                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil)
         
     }
 }
@@ -111,16 +111,15 @@ extension CalendarView where DayBackground == EmptyView {
          range: ClosedRange<Date>,
          startOfWeek: Weekday,
          orientation: Orientation,
+         onTap: @escaping (ViewModel.CalendarDate) -> Void,
          customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
          customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-         customMonthLabel: @escaping (String) -> MonthLabel,
-         onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+         customMonthLabel: @escaping (String) -> MonthLabel) {
         self.init(startDate: startDate, range: range,
                   startOfWeek: startOfWeek, orientation: orientation,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: customMonthLabel,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: customMonthLabel)
     }
 }
 
@@ -133,10 +132,9 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView,
                 startOfWeek: Weekday,
                 onTap: @escaping (ViewModel.CalendarDate) -> Void) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: nil, customMonthLabel: nil)
     }
 }
 
@@ -145,13 +143,12 @@ extension CalendarView where DayView == EmptyView, WeekdayLabel == EmptyView,
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
-                customDayBackground: @escaping (ViewModel.CalendarDate) -> DayBackground,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customDayBackground: @escaping (ViewModel.CalendarDate) -> DayBackground) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: customDayBackground,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: nil, customMonthLabel: nil)
     }
 }
 
@@ -160,13 +157,12 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView,
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
-                customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
-                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil)
     }
 }
 
@@ -175,13 +171,12 @@ extension CalendarView where DayBackground == EmptyView, WeekdayLabel == EmptyVi
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
-                customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customDayView: @escaping (ViewModel.CalendarDate) -> DayView) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: nil,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: nil, customMonthLabel: nil)
     }
 }
 
@@ -190,13 +185,12 @@ extension CalendarView where DayView == EmptyView, DayBackground == EmptyView,
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
-                customMonthLabel: @escaping (String) -> MonthLabel,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
+                customMonthLabel: @escaping (String) -> MonthLabel) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: nil, customDayBackground: nil,
-                  customWeekdayLabel: nil, customMonthLabel: customMonthLabel,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: nil, customMonthLabel: customMonthLabel)
     }
 }
 
@@ -204,14 +198,13 @@ extension CalendarView where DayBackground == EmptyView, MonthLabel == EmptyView
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
                 customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
-                customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                customWeekdayLabel: @escaping (String) -> WeekdayLabel) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: nil)
     }
 }
 
@@ -219,14 +212,13 @@ extension CalendarView where DayBackground == EmptyView {
     public init(selectedDate: Binding<Date>,
                 range: ClosedRange<Date>,
                 startOfWeek: Weekday,
+                onTap: @escaping (ViewModel.CalendarDate) -> Void,
                 customDayView: @escaping (ViewModel.CalendarDate) -> DayView,
                 customWeekdayLabel: @escaping (String) -> WeekdayLabel,
-                customMonthLabel: @escaping (String) -> MonthLabel,
-                onTap: @escaping (ViewModel.CalendarDate) -> Void) {
+                customMonthLabel: @escaping (String) -> MonthLabel) {
         self.init(selectedDate: selectedDate, range: range, startOfWeek: startOfWeek,
+                  onTap: onTap,
                   customDayView: customDayView, customDayBackground: nil,
-                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: customMonthLabel,
-                  onTap: onTap)
-        
+                  customWeekdayLabel: customWeekdayLabel, customMonthLabel: customMonthLabel)
     }
 }
