@@ -22,11 +22,11 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
                          customDayBackground: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         customMonthLabel: { _ in EmptyView() })
     }
     
     func test_default_init_startDate() throws {
@@ -46,8 +46,8 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
-                         customDayView: { _ in EmptyView() },
-                         onTap: { _ in })
+                         onTap: { _ in },
+                         customDayView: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomDayBackground() throws {
@@ -57,8 +57,8 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
-                         customDayBackground: { _ in EmptyView() },
-                         onTap: { _ in })
+                         onTap: { _ in },
+                         customDayBackground: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomWeekdayLabel() throws {
@@ -68,8 +68,8 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
-                         customWeekdayLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         onTap: { _ in },
+                         customWeekdayLabel: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomMonthLabel() throws {
@@ -79,8 +79,8 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         onTap: { _ in },
+                         customMonthLabel: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomDayViewWeekdayLabel() throws {
@@ -90,9 +90,9 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
-                         customWeekdayLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         customWeekdayLabel: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomDayViewWeekdayLabelMonthLabel() throws {
@@ -102,10 +102,10 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         customMonthLabel: { _ in EmptyView() })
     }
     
     func test_default_init_startDateCustomDayViewDayBackgroundWeekdayLabelMonthLabel() throws {
@@ -115,11 +115,11 @@ extension CalendarKitTests {
                          range: start ... end,
                          startOfWeek: .monday,
                          orientation: .horizontal, 
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
                          customDayBackground: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in })
+                         customMonthLabel: { _ in EmptyView() })
     }
 }
 
@@ -140,8 +140,8 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
-                         customDayBackground: { _ in EmptyView() },
-                         onTap: { _ in})
+                         onTap: { _ in },
+                         customDayBackground: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomWeekdayLabel() throws {
@@ -150,8 +150,8 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
-                         customWeekdayLabel: { _ in EmptyView() },
-                         onTap: { _ in})
+                         onTap: { _ in },
+                         customWeekdayLabel: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomDayView() throws {
@@ -160,8 +160,8 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
-                         customDayView: { _ in EmptyView() },
-                         onTap: { _ in})
+                         onTap: { _ in },
+                         customDayView: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomMonthLabel() throws {
@@ -170,8 +170,8 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in})
+                         onTap: { _ in },
+                         customMonthLabel: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomDayViewWeekdayLabel() throws {
@@ -180,9 +180,9 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
-                         customWeekdayLabel: { _ in EmptyView() },
-                         onTap: { _ in})
+                         customWeekdayLabel: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomDayViewWeekdayLabelMonthLabel() throws {
@@ -191,10 +191,10 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in})
+                         customMonthLabel: { _ in EmptyView() })
     }
     
     func test_default_selectedDateInitCustomDayViewDayBackgroundWeekdayLabelMonthLabel() throws {
@@ -203,11 +203,11 @@ extension CalendarKitTests {
         _ = CalendarView(selectedDate: .constant(start),
                          range: start ... end,
                          startOfWeek: .monday,
+                         onTap: { _ in },
                          customDayView: { _ in EmptyView() },
                          customDayBackground: { _ in EmptyView() },
                          customWeekdayLabel: { _ in EmptyView() },
-                         customMonthLabel: { _ in EmptyView() },
-                         onTap: { _ in})
+                         customMonthLabel: { _ in EmptyView() })
     }
 }
 
